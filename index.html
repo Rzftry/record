@@ -39,7 +39,7 @@
   }
   @keyframes shine { to { background-position: 200% center; } }
   .subtitle { text-align: center; color: var(--gray); font-size: 0.85rem; margin-bottom: 20px; font-style: italic; }
-  h2 { color: var(--teal-dark); font-size: 1.1rem; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 2px dashed #a7f3d0; }
+  h2 { color: var(--teal-dark); font-size: 1.1rem; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 2px dashed #a7f3d0; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
   .card {
     background: #fff; border-radius: 18px; padding: 20px;
     box-shadow: 0 4px 20px rgba(20,184,166,0.1); margin-bottom: 16px;
@@ -87,6 +87,25 @@
   .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
   .btn-red:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); box-shadow: 0 6px 18px rgba(239,68,68,0.4); }
   .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
+  .add-loc-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white; border: none; border-radius: 50%;
+    width: 32px; height: 32px; font-size: 1.2rem; font-weight: 700;
+    cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+    transition: transform 0.2s;
+  }
+  .add-loc-btn:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(135deg, #059669, #047857); }
+  .del-loc-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white; border: none; border-radius: 50%;
+    width: 22px; height: 22px; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(239,68,68,0.4); opacity: 0.7;
+    transition: opacity 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+  .del-loc-btn:hover { opacity: 1; transform: scale(1.15); }
   .profit-big {
     font-size: 2rem; font-weight: 800; text-align: center;
     padding: 18px; border-radius: 14px; margin-top: 12px; transition: all 0.3s;
@@ -108,10 +127,14 @@
   }
   .loc-card:nth-child(2) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); border-color: #fbcfe8; }
   .loc-card:nth-child(3) { background: linear-gradient(135deg, #fefce8, #fef9c3); border-color: #fde68a; }
+  .loc-card:nth-child(4) { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); border-color: #d8b4fe; }
+  .loc-card:nth-child(5) { background: linear-gradient(135deg, #ffedd5, #fed7aa); border-color: #fdba74; }
   .loc-card:hover { transform: scale(1.02); }
   .loc-card h3 { margin: 0 0 8px; font-size: 1rem; color: var(--teal-dark); }
   .loc-card:nth-child(2) h3 { color: var(--pink-dark); }
   .loc-card:nth-child(3) h3 { color: #b45309; }
+  .loc-card:nth-child(4) h3 { color: #7c3aed; }
+  .loc-card:nth-child(5) h3 { color: #c2410c; }
   .loc-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 3px 0; }
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   th {
@@ -152,11 +175,16 @@
   .bulk-row:nth-of-type(2) { background: linear-gradient(135deg, #f0fdfa, #ecfeff); }
   .bulk-row:nth-of-type(3) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); }
   .bulk-row:nth-of-type(4) { background: linear-gradient(135deg, #fefce8, #fef9c3); }
+  .bulk-row:nth-of-type(5) { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
   @media (max-width: 640px) {
     .bulk-row { grid-template-columns: 1fr 1fr; }
-    .bulk-row .loc-name { grid-column: span 2; }
+    .bulk-row .loc-info { grid-column: span 2; }
   }
-  .bulk-row .loc-name { font-weight: 700; font-size: 0.9rem; color: var(--teal-dark); padding-bottom: 10px; }
+  .loc-info {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 8px; padding-bottom: 10px; flex-wrap: wrap;
+  }
+  .loc-name { font-weight: 700; font-size: 0.9rem; color: var(--teal-dark); }
   .trend-row {
     display: flex; justify-content: space-between; padding: 8px 0;
     font-size: 0.88rem; border-bottom: 1px dashed #a7f3d0;
@@ -171,10 +199,10 @@
   .login-box {
     background: #fff; padding: 32px; border-radius: 20px;
     box-shadow: 0 8px 32px rgba(20,184,166,0.2);
-    width: 100%; max-width: 360px; border-top: 5px solid var(--teal);
+    width: 100%; max-width: 400px; border-top: 5px solid var(--teal);
   }
   .login-box h2 { text-align: center; margin-bottom: 20px; border: none; padding: 0; font-size: 1.3rem; }
-  .login-box input { margin-bottom: 12px; }
+  .login-box input, .login-box select { margin-bottom: 12px; }
   .login-box button { width: 100%; }
   .logout-bar {
     display: flex; justify-content: space-between; align-items: center;
@@ -182,10 +210,14 @@
   }
   .hidden { display: none !important; }
   .date-hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; font-weight: 600; }
+  .date-with-btn { display: flex; gap: 8px; align-items: stretch; }
+  .date-with-btn input { flex: 1; }
+  .date-with-btn .btn-sm { white-space: nowrap; padding: 0 12px; }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="loginScreen" class="login-screen hidden">
   <div class="login-box">
     <h2>🔐 Log Masuk</h2>
@@ -193,6 +225,22 @@
     <input type="password" id="loginPassword" placeholder="Kata Laluan" autocomplete="current-password">
     <button onclick="doLogin()">Log Masuk</button>
     <div id="loginError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- MODAL TAMBAH LOKASI -->
+<div id="addLocModal" class="login-screen hidden">
+  <div class="login-box" style="border-top-color:var(--green);">
+    <h2>➕ Tambah Lokasi Baru</h2>
+    <label>Nama Lokasi</label>
+    <input type="text" id="newLocName" placeholder="cth: Pasar Malam">
+    <label>Harga Jual (RM)</label>
+    <input type="number" id="newLocPrice" step="0.01" min="0" value="5">
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button onclick="closeAddLoc()" style="background:linear-gradient(135deg,#94a3b8,#64748b);">Batal</button>
+      <button onclick="saveNewLoc()" style="flex:2;">Simpan</button>
+    </div>
+    <div id="addLocError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
   </div>
 </div>
 
@@ -206,11 +254,17 @@
 
   <!-- REKOD PANTAS -->
   <div class="card">
-    <h2>⚡ Rekod Pantas — 3 Tempat Sekali</h2>
+    <h2>
+      <span>⚡ Rekod Pantas</span>
+      <button class="add-loc-btn" onclick="openAddLoc()" title="Tambah lokasi baru">+</button>
+    </h2>
     <div class="grid grid-2" style="margin-bottom:12px;">
       <div>
         <label>📅 Tarikh</label>
-        <input type="date" id="bulkDate">
+        <div class="date-with-btn">
+          <input type="date" id="bulkDate">
+          <button class="btn-amber btn-sm" onclick="setBulkDateToday()" title="Set ke hari ini">Hari Ini</button>
+        </div>
         <div class="date-hint" id="bulkDateDisplay"></div>
       </div>
       <div>
@@ -218,24 +272,11 @@
         <input type="number" id="bulkCost" min="0" step="0.01" value="2">
       </div>
     </div>
-    <div class="bulk-row">
-      <span class="loc-name">🏪 R&R — RM5.00</span>
-      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkRnrD" value="10" min="0"></div>
-      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkRnrS" value="8" min="0"></div>
-    </div>
-    <div class="bulk-row">
-      <span class="loc-name">🕌 Masjid D'warung — RM4.50</span>
-      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkMasjidD" value="10" min="0"></div>
-      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkMasjidS" value="8" min="0"></div>
-    </div>
-    <div class="bulk-row">
-      <span class="loc-name">🎓 Uniten — RM5.00</span>
-      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkUnitenD" value="10" min="0"></div>
-      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkUnitenS" value="8" min="0"></div>
-    </div>
-    <button onclick="bulkSave()" style="margin-top:12px; width:100%;">💾 Simpan Semua 3 Tempat</button>
+    <div id="bulkLocations"></div>
+    <button onclick="bulkSave()" style="margin-top:12px; width:100%;">💾 Simpan Semua Tempat</button>
   </div>
 
+  <!-- RINGKASAN HARI INI -->
   <div class="card">
     <h2>📊 Ringkasan Hari Ini</h2>
     <div id="todayStats" class="grid grid-3"></div>
@@ -249,16 +290,19 @@
     </div>
   </div>
 
+  <!-- CHART -->
   <div class="card">
     <h2>📈 Trend Untung 7 Hari Terakhir</h2>
     <canvas id="profitChart" height="140"></canvas>
   </div>
 
+  <!-- TREND -->
   <div class="card">
     <h2>🏆 Analisis Prestasi</h2>
     <div id="trendInfo"><div class="empty">Belum cukup data</div></div>
   </div>
 
+  <!-- BULANAN -->
   <div class="card">
     <h2>📅 Ringkasan Bulanan</h2>
     <div id="monthlyStats" style="overflow-x:auto;"></div>
@@ -268,28 +312,37 @@
     </div>
   </div>
 
+  <!-- CUSTOM REPORT -->
   <div class="card">
     <h2>🔍 Laporan Custom</h2>
-    <div class="grid grid-2" style="margin-bottom:12px;">
+    <div class="grid grid-3" style="margin-bottom:12px;">
       <div>
-        <label>📅 Dari Tarikh</label>
+        <label>📅 Dari</label>
         <input type="date" id="filterFrom">
         <div class="date-hint" id="filterFromDisplay"></div>
       </div>
       <div>
-        <label>📅 Hingga Tarikh</label>
+        <label>📅 Hingga</label>
         <input type="date" id="filterTo">
         <div class="date-hint" id="filterToDisplay"></div>
+      </div>
+      <div>
+        <label>📍 Lokasi</label>
+        <select id="filterLoc"><option value="">Semua Lokasi</option></select>
       </div>
     </div>
     <button onclick="generateCustomReport()">📊 Jana Laporan</button>
     <div id="customReport" style="margin-top:16px;"></div>
   </div>
 
+  <!-- REKOD HARI INI -->
   <div class="card">
     <h2>📝 Rekod Hari Ini</h2>
     <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <button class="btn-blue btn-sm" onclick="exportCSV()">📥 Export CSV Bulan Ini</button>
+      <select id="todayLocFilter" style="flex:1; max-width:220px;">
+        <option value="">📍 Semua Lokasi</option>
+      </select>
+      <button class="btn-blue btn-sm" onclick="exportCSV()">📥 Export Bulan Ini</button>
       <button class="btn-amber btn-sm" onclick="exportCSVAll()">📥 Export Semua</button>
     </div>
     <div id="todayRecords"></div>
@@ -300,12 +353,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, onSnapshot, query,
-  deleteDoc, doc, serverTimestamp, updateDoc
+  deleteDoc, doc, serverTimestamp, updateDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+/* ============ CONFIG ============ */
 const firebaseConfig = {
   apiKey: "AIzaSyCmqerXQXrZ2N-QaYv4IXXhS1LaXFx_-2g",
   authDomain: "nadiahhomemade.firebaseapp.com",
@@ -317,70 +371,243 @@ const firebaseConfig = {
 };
 const REQUIRE_AUTH = false;
 
-const LOCATIONS = {
-  rnr:    { name: "R&R",             price: 5   },
-  masjid: { name: "Masjid D'warung", price: 4.5 },
-  uniten: { name: "Uniten",          price: 5   }
-};
+/* ============ DEFAULTS ============ */
+const DEFAULT_LOCATIONS = [
+  { id: 'rnr',    name: 'R&R',             price: 5,   order: 1 },
+  { id: 'masjid', name: "Masjid D'warung", price: 4.5, order: 2 },
+  { id: 'uniten', name: 'Uniten',          price: 5,   order: 3 }
+];
+const ORIGINAL_IDS = ['rnr', 'masjid', 'uniten'];
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = REQUIRE_AUTH ? getAuth(app) : null;
 
+/* ============ HELPERS ============ */
 const $ = id => document.getElementById(id);
 const fmt = n => 'RM ' + n.toFixed(2);
 const pct = n => n.toFixed(1) + '%';
 const fmtDate = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; };
 const fmtShort = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}`; };
+const todayISO = () => new Date().toISOString().slice(0,10);
 
+/* ============ STATE ============ */
 const statusEl = $('status');
 const loginScreen = $('loginScreen');
 const appEl = $('app');
 const logoutBtn = $('logoutBtn');
+const addLocModal = $('addLocModal');
 
-const todayStr = new Date().toISOString().slice(0,10);
-$('bulkDate').value = todayStr;
-
+// Pre-populate defaults for instant render
+let allLocations = DEFAULT_LOCATIONS.map(l => ({ ...l }));
 let allRecords = [];
 let chartInstance = null;
-let unsubscribe = null;
+let recordUnsub = null;
+let locUnsub = null;
+let seeded = false;
 
+// Selected filters
+let todayLocFilter = '';
+let reportLocFilter = '';
+
+/* ============ LOCATION HELPERS ============ */
+function getLoc(id) {
+  return allLocations.find(l => l.id === id) || { id, name: `[${id}]`, price: 0 };
+}
+
+function getRelevantLocations() {
+  const ids = new Set(allLocations.map(l => l.id));
+  allRecords.forEach(r => ids.add(r.location));
+  return Array.from(ids).map(id => getLoc(id));
+}
+
+/* ============ CALC ============ */
 function calcRecord(r) {
   const revenue = r.sold * r.sellPrice;
   const cost = r.delivered * r.costPrice;
   return { revenue, cost, profit: revenue - cost, sedekah: r.delivered - r.sold };
 }
 
+/* ============ DATE DEFAULT TODAY ============ */
+$('bulkDate').value = todayISO();
+$('bulkDateDisplay').textContent = '📅 ' + fmtDate(todayISO());
+
+window.setBulkDateToday = function() {
+  const t = todayISO();
+  $('bulkDate').value = t;
+  $('bulkDateDisplay').textContent = '📅 ' + fmtDate(t);
+};
+
+/* ============ BULK FORM (DYNAMIC) ============ */
+function renderBulkForm() {
+  // Save current input values
+  const saved = {};
+  document.querySelectorAll('.bulk-row').forEach(row => {
+    const d = row.querySelector('.bulk-d');
+    const s = row.querySelector('.bulk-s');
+    if (d && s) saved[row.dataset.loc] = { d: d.value, s: s.value };
+  });
+
+  const container = $('bulkLocations');
+  if (!allLocations.length) {
+    container.innerHTML = '<div class="empty">Memuatkan lokasi...</div>';
+    return;
+  }
+
+  container.innerHTML = allLocations.map(loc => {
+    const prev = saved[loc.id];
+    const defD = prev ? prev.d : (ORIGINAL_IDS.includes(loc.id) ? 10 : 0);
+    const defS = prev ? prev.s : (ORIGINAL_IDS.includes(loc.id) ? 8 : 0);
+    return `<div class="bulk-row" data-loc="${loc.id}">
+      <div class="loc-info">
+        <span class="loc-name">${loc.name} — ${fmt(loc.price)}</span>
+        <button class="del-loc-btn" data-loc-del="${loc.id}" title="Padam lokasi">×</button>
+      </div>
+      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" class="bulk-d" value="${defD}" min="0"></div>
+      <div><label style="font-size:0.72rem;">Jual</label><input type="number" class="bulk-s" value="${defS}" min="0"></div>
+    </div>`;
+  }).join('');
+
+  container.querySelectorAll('[data-loc-del]').forEach(b => {
+    b.onclick = () => deleteLocation(b.dataset.locDel);
+  });
+}
+
+/* ============ BULK SAVE ============ */
 window.bulkSave = async function() {
   const date = $('bulkDate').value;
   const cost = parseFloat($('bulkCost').value) || 0;
   if (!date) return alert('Pilih tarikh');
 
-  const data = [
-    { loc: 'rnr',    d: +$('bulkRnrD').value,    s: +$('bulkRnrS').value },
-    { loc: 'masjid', d: +$('bulkMasjidD').value, s: +$('bulkMasjidS').value },
-    { loc: 'uniten', d: +$('bulkUnitenD').value, s: +$('bulkUnitenS').value }
-  ];
-  for (const row of data) {
-    if (row.s > row.d) return alert(`Jual ${LOCATIONS[row.loc].name} > hantar!`);
+  const rows = document.querySelectorAll('.bulk-row');
+  const data = [];
+  for (const row of rows) {
+    const locId = row.dataset.loc;
+    const d = +row.querySelector('.bulk-d').value || 0;
+    const s = +row.querySelector('.bulk-s').value || 0;
+    if (s > d) return alert(`Jual ${getLoc(locId).name} tak boleh lebih hantar!`);
+    if (d === 0) continue;
+    data.push({ loc: locId, d, s });
   }
+  if (!data.length) return alert('Tiada data untuk disimpan (semua hantar = 0)');
+
   try {
     for (const row of data) {
-      if (row.d === 0) continue;
       await addDoc(collection(db, 'records'), {
         date, location: row.loc, delivered: row.d, sold: row.s,
-        costPrice: cost, sellPrice: LOCATIONS[row.loc].price,
+        costPrice: cost, sellPrice: getLoc(row.loc).price,
         createdAt: serverTimestamp()
       });
     }
-    alert(`✅ Rekod ${fmtDate(date)} disimpan`);
+    alert(`✅ ${data.length} rekod ${fmtDate(date)} disimpan`);
   } catch (err) { alert('Gagal: ' + err.message); }
 };
 
+/* ============ ADD LOCATION ============ */
+window.openAddLoc = function() {
+  $('newLocName').value = '';
+  $('newLocPrice').value = '5';
+  $('addLocError').textContent = '';
+  addLocModal.classList.remove('hidden');
+  setTimeout(() => $('newLocName').focus(), 100);
+};
+
+window.closeAddLoc = function() {
+  addLocModal.classList.add('hidden');
+};
+
+window.saveNewLoc = async function() {
+  const name = $('newLocName').value.trim();
+  const price = parseFloat($('newLocPrice').value);
+  const errEl = $('addLocError');
+  errEl.textContent = '';
+
+  if (!name) { errEl.textContent = 'Sila masukkan nama lokasi'; return; }
+  if (isNaN(price) || price < 0) { errEl.textContent = 'Harga tak sah'; return; }
+  if (allLocations.some(l => l.name.toLowerCase() === name.toLowerCase())) {
+    errEl.textContent = 'Nama lokasi sudah wujud';
+    return;
+  }
+
+  const id = 'loc_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const maxOrder = Math.max(0, ...allLocations.map(l => l.order || 0));
+
+  try {
+    await setDoc(doc(db, 'locations', id), {
+      name, price, order: maxOrder + 1, createdAt: serverTimestamp()
+    });
+    closeAddLoc();
+  } catch (e) {
+    errEl.textContent = 'Gagal: ' + e.message;
+  }
+};
+
+/* ============ DELETE LOCATION ============ */
+async function deleteLocation(locId) {
+  const loc = getLoc(locId);
+  const used = allRecords.some(r => r.location === locId);
+  if (used) {
+    return alert(`Lokasi "${loc.name}" ada rekod sedia ada.\n\nPadam semua rekod lokasi ini dulu sebelum padam lokasi.`);
+  }
+  if (!confirm(`Padam lokasi "${loc.name}"?`)) return;
+  try { await deleteDoc(doc(db, 'locations', locId)); }
+  catch (e) { alert(e.message); }
+}
+
+/* ============ LOCATIONS LISTENER ============ */
+function startLocations() {
+  if (locUnsub) locUnsub();
+  locUnsub = onSnapshot(collection(db, 'locations'), async snap => {
+    // Seed defaults on first empty
+    if (snap.empty && !seeded) {
+      seeded = true;
+      for (const loc of DEFAULT_LOCATIONS) {
+        await setDoc(doc(db, 'locations', loc.id), {
+          name: loc.name, price: loc.price, order: loc.order,
+          createdAt: serverTimestamp()
+        });
+      }
+      return;
+    }
+    allLocations = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+    renderBulkForm();
+    updateLocDropdowns();
+    render();
+  }, err => {
+    console.error('Locations error:', err);
+    statusEl.textContent = '❌ ' + err.message;
+    statusEl.style.color = 'var(--red)';
+  });
+}
+
+/* ============ LOCATION DROPDOWNS ============ */
+function updateLocDropdowns() {
+  const opts = allLocations.map(l =>
+    `<option value="${l.id}">${l.name}</option>`
+  ).join('');
+
+  const sel1 = $('filterLoc');
+  const sel2 = $('todayLocFilter');
+  const v1 = sel1.value, v2 = sel2.value;
+
+  sel1.innerHTML = '<option value="">Semua Lokasi</option>' + opts;
+  sel2.innerHTML = '<option value="">📍 Semua Lokasi</option>' + opts;
+
+  sel1.value = v1;
+  sel2.value = v2;
+  reportLocFilter = v1;
+  todayLocFilter = v2;
+}
+
+$('filterLoc').addEventListener('change', e => { reportLocFilter = e.target.value; });
+$('todayLocFilter').addEventListener('change', e => { todayLocFilter = e.target.value; renderTodayRecords(); });
+
+/* ============ RECORDS LISTENER ============ */
 function startData() {
-  if (unsubscribe) unsubscribe();
+  if (recordUnsub) recordUnsub();
   const q = query(collection(db, 'records'));
-  unsubscribe = onSnapshot(q, snap => {
+  recordUnsub = onSnapshot(q, snap => {
     statusEl.textContent = '✅ Bersambung';
     statusEl.style.color = '#10b981';
     allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -392,6 +619,7 @@ function startData() {
   });
 }
 
+/* ============ RENDER ALL ============ */
 function render() {
   allRecords.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   renderToday();
@@ -401,15 +629,18 @@ function render() {
   renderTrend();
 }
 
+/* ============ TODAY ============ */
 function renderToday() {
-  const today = new Date().toISOString().slice(0,10);
+  const today = todayISO();
   const recs = allRecords.filter(r => r.date === today);
+  const locs = getRelevantLocations();
   const byLoc = {};
-  Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0 });
+  locs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, name: l.name });
   let totalProfit = 0, totalSedekah = 0;
 
   recs.forEach(r => {
     const c = calcRecord(r);
+    if (!byLoc[r.location]) byLoc[r.location] = { d:0, s:0, p:0, name: getLoc(r.location).name };
     byLoc[r.location].d += r.delivered;
     byLoc[r.location].s += r.sold;
     byLoc[r.location].p += c.profit;
@@ -417,11 +648,10 @@ function renderToday() {
     totalSedekah += c.sedekah;
   });
 
-  $('todayStats').innerHTML = Object.entries(LOCATIONS).map(([key, loc]) => {
-    const s = byLoc[key];
+  $('todayStats').innerHTML = Object.entries(byLoc).map(([id, s]) => {
     const pctSold = s.d ? (s.s / s.d * 100) : 0;
     return `<div class="loc-card">
-      <h3>${loc.name}</h3>
+      <h3>${s.name}</h3>
       <div class="loc-row"><span>Hantar</span><strong>${s.d}</strong></div>
       <div class="loc-row"><span>Jual</span><strong>${s.s}</strong></div>
       <div class="loc-row"><span>% Jual</span><strong>${pct(pctSold)}</strong></div>
@@ -434,15 +664,18 @@ function renderToday() {
   $('todayProfit').className = 'profit-big ' + (totalProfit >= 0 ? 'profit' : 'loss');
 }
 
+/* ============ MONTHLY ============ */
 function renderMonthly() {
   const monthStr = new Date().toISOString().slice(0,7);
   const recs = allRecords.filter(r => r.date.startsWith(monthStr));
+  const locs = getRelevantLocations();
   const byLoc = {};
-  Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0, rev:0, cost:0 });
+  locs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, rev:0, cost:0, name: l.name });
   let T = { d:0, s:0, p:0, rev:0, cost:0 }, totalSedekah = 0;
 
   recs.forEach(r => {
     const c = calcRecord(r);
+    if (!byLoc[r.location]) byLoc[r.location] = { d:0, s:0, p:0, rev:0, cost:0, name: getLoc(r.location).name };
     byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
     byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
     byLoc[r.location].cost += c.cost;
@@ -451,11 +684,10 @@ function renderMonthly() {
     totalSedekah += c.sedekah;
   });
 
-  let rows = Object.entries(LOCATIONS).map(([key, loc]) => {
-    const s = byLoc[key];
+  let rows = Object.entries(byLoc).map(([id, s]) => {
     const pctSold = s.d ? (s.s / s.d * 100) : 0;
     return `<tr>
-      <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d - s.s}</td>
+      <td>${s.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d - s.s}</td>
       <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
       <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
     </tr>`;
@@ -476,17 +708,20 @@ function renderMonthly() {
   $('monthlySedekah').textContent = totalSedekah + ' unit';
 }
 
+/* ============ TODAY RECORDS (with location filter) ============ */
 function renderTodayRecords() {
-  const today = new Date().toISOString().slice(0,10);
-  const recs = allRecords.filter(r => r.date === today);
+  const today = todayISO();
+  let recs = allRecords.filter(r => r.date === today);
+  if (todayLocFilter) recs = recs.filter(r => r.location === todayLocFilter);
+
   if (!recs.length) {
-    $('todayRecords').innerHTML = '<div class="empty">Belum ada rekod hari ini 🍃</div>';
+    $('todayRecords').innerHTML = '<div class="empty">Tiada rekod untuk dipaparkan 🍃</div>';
     return;
   }
 
   $('todayRecords').innerHTML = recs.map(r => {
     const c = calcRecord(r);
-    const loc = LOCATIONS[r.location];
+    const loc = getLoc(r.location);
     return `<div class="record-item" style="border-left-color:${c.profit>=0?'#10b981':'#ef4444'}">
       <div class="info">
         <strong>${loc.name}</strong><br>
@@ -525,6 +760,7 @@ function renderTodayRecords() {
   });
 }
 
+/* ============ CHART ============ */
 function renderChart() {
   const days = [], profits = [];
   for (let i = 6; i >= 0; i--) {
@@ -548,13 +784,11 @@ function renderChart() {
         borderSkipped: false
       }]
     },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
   });
 }
 
+/* ============ TREND ============ */
 function renderTrend() {
   const byDate = {};
   allRecords.forEach(r => {
@@ -585,24 +819,32 @@ function renderTrend() {
   `;
 }
 
+/* ============ CUSTOM REPORT (with location filter) ============ */
 window.generateCustomReport = function() {
   const from = $('filterFrom').value;
   const to = $('filterTo').value;
+  const locFilter = $('filterLoc').value;
   if (!from || !to) return alert('Sila pilih tarikh dari & hingga');
   if (from > to) return alert('Tarikh "dari" mesti sebelum "hingga"');
 
-  const recs = allRecords.filter(r => r.date >= from && r.date <= to);
+  let recs = allRecords.filter(r => r.date >= from && r.date <= to);
+  if (locFilter) recs = recs.filter(r => r.location === locFilter);
+
   if (!recs.length) {
     $('customReport').innerHTML = '<div class="empty">Tiada rekod dalam julat ini</div>';
     return;
   }
 
+  // Determine locations to show
+  let showLocs = locFilter ? [getLoc(locFilter)] : getRelevantLocations().filter(l => recs.some(r => r.location === l.id));
+
   const byLoc = {};
-  Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0, rev:0, cost:0 });
+  showLocs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, rev:0, cost:0, name: l.name });
   let T = { d:0, s:0, p:0, rev:0, cost:0 }, sedekah = 0;
 
   recs.forEach(r => {
     const c = calcRecord(r);
+    if (!byLoc[r.location]) byLoc[r.location] = { d:0, s:0, p:0, rev:0, cost:0, name: getLoc(r.location).name };
     byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
     byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
     byLoc[r.location].cost += c.cost;
@@ -611,19 +853,19 @@ window.generateCustomReport = function() {
     sedekah += c.sedekah;
   });
 
+  const locLabel = locFilter ? getLoc(locFilter).name : 'Semua Lokasi';
   let html = `<div style="margin-bottom:12px; color:var(--gray); font-size:0.88rem;">
-    ${recs.length} rekod · <strong>${fmtDate(from)} → ${fmtDate(to)}</strong> · Sedekah: <strong>${sedekah} unit</strong>
+    ${recs.length} rekod · <strong>${fmtDate(from)} → ${fmtDate(to)}</strong> · 📍 ${locLabel} · Sedekah: <strong>${sedekah} unit</strong>
   </div>`;
   html += `<div style="overflow-x:auto;"><table><thead><tr>
     <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
     <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
   </tr></thead><tbody>`;
 
-  Object.entries(LOCATIONS).forEach(([k, loc]) => {
-    const s = byLoc[k];
+  Object.entries(byLoc).forEach(([id, s]) => {
     const pctSold = s.d ? (s.s/s.d*100) : 0;
     html += `<tr>
-      <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
+      <td>${s.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
       <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
       <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
     </tr>`;
@@ -639,12 +881,13 @@ window.generateCustomReport = function() {
   $('customReport').innerHTML = html;
 };
 
+/* ============ CSV EXPORT ============ */
 function buildCSV(recs, filename) {
   const headers = ['Tarikh','Tempat','Hantar','Jual','Sedekah','Harga Kos','Harga Jual','Jualan(RM)','Kos(RM)','Untung(RM)','% Jual'];
   const rows = recs.map(r => {
     const c = calcRecord(r);
     const pctSold = r.delivered ? (r.sold / r.delivered * 100).toFixed(1) : '0';
-    return [fmtDate(r.date), LOCATIONS[r.location].name, r.delivered, r.sold,
+    return [fmtDate(r.date), getLoc(r.location).name, r.delivered, r.sold,
       c.sedekah, r.costPrice.toFixed(2), r.sellPrice.toFixed(2),
       c.revenue.toFixed(2), c.cost.toFixed(2), c.profit.toFixed(2), pctSold];
   });
@@ -672,6 +915,7 @@ window.exportCSVAll = function() {
   buildCSV(allRecords, `jualan-semua-${dd}-${mm}-${now.getFullYear()}.csv`);
 };
 
+/* ============ DATE HINTS ============ */
 $('bulkDate').addEventListener('input', e => {
   $('bulkDateDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
 });
@@ -681,8 +925,8 @@ $('filterFrom').addEventListener('input', e => {
 $('filterTo').addEventListener('input', e => {
   $('filterToDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
 });
-$('bulkDateDisplay').textContent = '📅 ' + fmtDate(todayStr);
 
+/* ============ AUTH ============ */
 window.doLogin = async function() {
   const email = $('loginEmail').value;
   const pass = $('loginPassword').value;
@@ -694,6 +938,10 @@ window.doLogin = async function() {
 
 window.doLogout = async function() { if (auth) await signOut(auth); };
 
+/* ============ INIT ============ */
+// Render bulk form with defaults immediately
+renderBulkForm();
+
 if (REQUIRE_AUTH) {
   onAuthStateChanged(auth, user => {
     if (user) {
@@ -701,15 +949,18 @@ if (REQUIRE_AUTH) {
       appEl.classList.remove('hidden');
       logoutBtn.classList.remove('hidden');
       logoutBtn.textContent = 'Log Keluar (' + user.email + ')';
+      startLocations();
       startData();
     } else {
       loginScreen.classList.remove('hidden');
       appEl.classList.add('hidden');
       logoutBtn.classList.add('hidden');
-      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+      if (locUnsub) { locUnsub(); locUnsub = null; }
+      if (recordUnsub) { recordUnsub(); recordUnsub = null; }
     }
   });
 } else {
+  startLocations();
   startData();
 }
 
