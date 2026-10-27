@@ -2,12 +2,18 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rekod Jualan - Nadiah Homemade</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rekod Jualan — Nadiah Homemade</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#16a34a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --green: #16a34a; --green-dark: #166534; --green-light: #dcfce7;
     --red: #dc2626; --red-light: #fee2e2; --gray: #6b7280;
+    --amber: #f59e0b; --blue: #3b82f6;
   }
   * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
   body {
@@ -15,9 +21,9 @@
     background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
     color: #064e3b; min-height: 100vh;
   }
-  .container { max-width: 1000px; margin: 0 auto; }
+  .container { max-width: 1000px; margin: 0 auto; padding-bottom: 40px; }
   h1 { color: var(--green-dark); font-size: 1.5rem; margin: 8px 0 16px; }
-  h2 { color: var(--green-dark); font-size: 1.15rem; margin: 0 0 12px; }
+  h2 { color: var(--green-dark); font-size: 1.1rem; margin: 0 0 12px; }
   .card {
     background: #fff; border-radius: 12px; padding: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 16px;
@@ -27,7 +33,7 @@
   .grid-2 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-  label { display: block; font-size: 0.85rem; color: var(--gray); margin-bottom: 4px; font-weight: 600; }
+  label { display: block; font-size: 0.82rem; color: var(--gray); margin-bottom: 4px; font-weight: 600; }
   input, select {
     width: 100%; padding: 10px; border: 1.5px solid #d1fae5;
     border-radius: 8px; font-size: 1rem; background: #f9fefb; color: #064e3b;
@@ -35,11 +41,15 @@
   input:focus, select:focus { outline: none; border-color: var(--green); }
   button {
     background: var(--green); color: white; border: none;
-    padding: 12px 20px; border-radius: 8px; font-size: 1rem;
+    padding: 12px 20px; border-radius: 8px; font-size: 0.95rem;
     font-weight: 600; cursor: pointer; transition: background 0.15s;
   }
   button:hover { background: var(--green-dark); }
   button:disabled { background: #9ca3af; cursor: not-allowed; }
+  .btn-amber { background: var(--amber); } .btn-amber:hover { background: #d97706; }
+  .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2563eb; }
+  .btn-red { background: var(--red); } .btn-red:hover { background: #991b1b; }
+  .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
   .preview {
     background: var(--green-light); border-radius: 8px; padding: 12px;
     margin: 12px 0; font-size: 0.9rem;
@@ -60,27 +70,69 @@
   }
   .loc-card h3 { margin: 0 0 8px; font-size: 1rem; color: var(--green-dark); }
   .loc-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 2px 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  th { text-align: left; padding: 8px; background: var(--green-light); color: var(--green-dark); font-size: 0.8rem; }
-  td { padding: 8px; border-bottom: 1px solid #ecfdf5; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px; background: var(--green-light); color: var(--green-dark); font-size: 0.78rem; white-space: nowrap; }
+  td { padding: 8px; border-bottom: 1px solid #ecfdf5; white-space: nowrap; }
   .record-item {
     display: flex; justify-content: space-between; align-items: center;
     padding: 10px; border-radius: 8px; background: #f9fefb;
-    margin-bottom: 8px; border-left: 4px solid var(--green);
+    margin-bottom: 8px; border-left: 4px solid var(--green); gap: 8px;
   }
-  .record-item .info { font-size: 0.9rem; }
-  .del-btn { background: var(--red); padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
-  .del-btn:hover { background: #991b1b; }
+  .record-item .info { font-size: 0.88rem; flex: 1; }
+  .record-item .actions { display: flex; gap: 4px; }
   .empty { color: var(--gray); text-align: center; padding: 16px; font-style: italic; }
   .status { font-size: 0.75rem; color: var(--gray); text-align: right; padding: 4px 0; }
+  .sedekah-box {
+    padding: 10px; background: var(--green-light); border-radius: 8px;
+    margin-top: 12px; display: flex; justify-content: space-between;
+    align-items: center; font-weight: 600;
+  }
+  .bulk-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+  @media (max-width: 640px) { .bulk-row { grid-template-columns: 1fr 1fr; } .bulk-row .loc-name { grid-column: span 2; } }
+  .bulk-row .loc-name { font-weight: 600; font-size: 0.88rem; color: var(--green-dark); }
+  .trend-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.88rem; border-bottom: 1px dashed #d1fae5; }
+  .trend-row:last-child { border-bottom: none; }
+  .login-screen {
+    position: fixed; inset: 0; background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 999;
+  }
+  .login-box {
+    background: #fff; padding: 28px; border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12); width: 100%; max-width: 360px;
+    border-top: 4px solid var(--green);
+  }
+  .login-box h2 { text-align: center; margin-bottom: 20px; }
+  .login-box input { margin-bottom: 12px; }
+  .login-box button { width: 100%; }
+  .logout-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: var(--gray); margin-bottom: 8px;
+  }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>🌿 Rekod Jualan — Nadiah Homemade</h1>
-  <div class="status" id="status">Menyambung ke Firebase...</div>
 
-  <!-- FORM -->
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen hidden">
+  <div class="login-box">
+    <h2>🔐 Log Masuk</h2>
+    <input type="email" id="loginEmail" placeholder="Emel" autocomplete="username">
+    <input type="password" id="loginPassword" placeholder="Kata Laluan" autocomplete="current-password">
+    <button onclick="doLogin()">Log Masuk</button>
+    <div id="loginError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="container">
+  <h1>🌿 Rekod Jualan — Nadiah Homemade</h1>
+  <div class="logout-bar">
+    <span class="status" id="status">Menyambung...</span>
+    <button id="logoutBtn" class="btn-sm btn-red hidden" onclick="doLogout()">Log Keluar</button>
+  </div>
+
+  <!-- FORM BIASA -->
   <div class="card">
     <h2>➕ Tambah Rekod</h2>
     <form id="recordForm">
@@ -110,31 +162,102 @@
           <input type="number" id="costInput" min="0" step="0.01" value="2" required>
         </div>
       </div>
-
       <div class="preview" id="preview"></div>
       <button type="submit" id="submitBtn">💾 Simpan Rekod</button>
     </form>
+  </div>
+
+  <!-- BULK ENTRY -->
+  <div class="card">
+    <h2>⚡ Rekod Pantas — 3 Tempat Sekali</h2>
+    <div class="grid grid-2" style="margin-bottom:12px;">
+      <div>
+        <label>Tarikh</label>
+        <input type="date" id="bulkDate">
+      </div>
+      <div>
+        <label>Harga Kos (RM)</label>
+        <input type="number" id="bulkCost" min="0" step="0.01" value="2">
+      </div>
+    </div>
+    <div class="bulk-row">
+      <span class="loc-name">R&R — RM5.00</span>
+      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkRnrD" value="10" min="0"></div>
+      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkRnrS" value="8" min="0"></div>
+    </div>
+    <div class="bulk-row">
+      <span class="loc-name">Masjid D'warung — RM4.50</span>
+      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkMasjidD" value="10" min="0"></div>
+      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkMasjidS" value="8" min="0"></div>
+    </div>
+    <div class="bulk-row">
+      <span class="loc-name">Uniten — RM5.00</span>
+      <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkUnitenD" value="10" min="0"></div>
+      <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkUnitenS" value="8" min="0"></div>
+    </div>
+    <button onclick="bulkSave()" style="margin-top:8px;">💾 Simpan Semua 3 Tempat</button>
   </div>
 
   <!-- RINGKASAN HARI INI -->
   <div class="card">
     <h2>📊 Ringkasan Hari Ini</h2>
     <div id="todayStats" class="grid grid-3"></div>
+    <div class="sedekah-box">
+      <span>🤲 Jumlah Sedekah Hari Ini</span>
+      <strong id="todaySedekah">0 unit</strong>
+    </div>
     <div class="profit-big" id="todayProfit">RM 0.00</div>
     <div style="text-align:center; color:var(--gray); font-size:0.85rem; margin-top:8px;">
       Untung / Rugi Hari Ini
     </div>
   </div>
 
+  <!-- CHART -->
+  <div class="card">
+    <h2>📈 Trend Untung 7 Hari Terakhir</h2>
+    <canvas id="profitChart" height="140"></canvas>
+  </div>
+
+  <!-- TREND ANALYSIS -->
+  <div class="card">
+    <h2>🏆 Analisis Prestasi</h2>
+    <div id="trendInfo"><div class="empty">Belum cukup data</div></div>
+  </div>
+
   <!-- RINGKASAN BULANAN -->
   <div class="card">
     <h2>📅 Ringkasan Bulanan</h2>
     <div id="monthlyStats" style="overflow-x:auto;"></div>
+    <div class="sedekah-box">
+      <span>🤲 Jumlah Sedekah Bulan Ini</span>
+      <strong id="monthlySedekah">0 unit</strong>
+    </div>
+  </div>
+
+  <!-- CUSTOM FILTER -->
+  <div class="card">
+    <h2>🔍 Laporan Custom</h2>
+    <div class="grid grid-2" style="margin-bottom:12px;">
+      <div>
+        <label>Dari Tarikh</label>
+        <input type="date" id="filterFrom">
+      </div>
+      <div>
+        <label>Hingga Tarikh</label>
+        <input type="date" id="filterTo">
+      </div>
+    </div>
+    <button onclick="generateCustomReport()">📊 Jana Laporan</button>
+    <div id="customReport" style="margin-top:16px;"></div>
   </div>
 
   <!-- REKOD HARI INI -->
   <div class="card">
     <h2>📝 Rekod Hari Ini</h2>
+    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+      <button class="btn-blue btn-sm" onclick="exportCSV()">📥 Export CSV Bulan Ini</button>
+      <button class="btn-amber btn-sm" onclick="exportCSVAll()">📥 Export Semua</button>
+    </div>
     <div id="todayRecords"></div>
   </div>
 </div>
@@ -142,13 +265,15 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, collection, addDoc, onSnapshot,
-  query, orderBy, deleteDoc, doc, serverTimestamp
+  getFirestore, collection, addDoc, onSnapshot, query,
+  deleteDoc, doc, serverTimestamp, updateDoc, getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-/* ================= CONFIG FIREBASE ANDA ================= */
+/* ============ CONFIG ============ */
 const firebaseConfig = {
-  
   apiKey: "AIzaSyCmqerXQXrZ2N-QaYv4IXXhS1LaXFx_-2g",
   authDomain: "nadiahhomemade.firebaseapp.com",
   projectId: "nadiahhomemade",
@@ -156,99 +281,102 @@ const firebaseConfig = {
   messagingSenderId: "136280919426",
   appId: "1:136280919426:web:f940be4772c69bed43d39b",
   measurementId: "G-N8RH3STX2T"
-
 };
-/* ======================================================== */
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Set true selepas setup Auth (rujuk langkah di bawah)
+const REQUIRE_AUTH = false;
 
 const LOCATIONS = {
-  rnr:    { name: "R&R",            price: 5   },
+  rnr:    { name: "R&R",             price: 5   },
   masjid: { name: "Masjid D'warung", price: 4.5 },
-  uniten: { name: "Uniten",         price: 5   }
+  uniten: { name: "Uniten",          price: 5   }
 };
 
-const form = document.getElementById('recordForm');
-const dateInput = document.getElementById('dateInput');
-const locInput = document.getElementById('locInput');
-const deliveredInput = document.getElementById('deliveredInput');
-const soldInput = document.getElementById('soldInput');
-const costInput = document.getElementById('costInput');
-const previewEl = document.getElementById('preview');
-const submitBtn = document.getElementById('submitBtn');
-const todayStatsEl = document.getElementById('todayStats');
-const todayProfitEl = document.getElementById('todayProfit');
-const monthlyStatsEl = document.getElementById('monthlyStats');
-const todayRecordsEl = document.getElementById('todayRecords');
-const statusEl = document.getElementById('status');
+/* ============ INIT ============ */
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = REQUIRE_AUTH ? getAuth(app) : null;
 
-let allRecords = [];
+/* ============ ELEMENTS ============ */
+const $ = id => document.getElementById(id);
+const form = $('recordForm');
+const dateInput = $('dateInput');
+const locInput = $('locInput');
+const deliveredInput = $('deliveredInput');
+const soldInput = $('soldInput');
+const costInput = $('costInput');
+const previewEl = $('preview');
+const submitBtn = $('submitBtn');
+const statusEl = $('status');
+const loginScreen = $('loginScreen');
+const appEl = $('app');
+const logoutBtn = $('logoutBtn');
+
 const todayStr = new Date().toISOString().slice(0,10);
 dateInput.value = todayStr;
+$('bulkDate').value = todayStr;
 
 const fmt = n => 'RM ' + n.toFixed(2);
 const pct = n => n.toFixed(1) + '%';
 
+let allRecords = [];
+let chartInstance = null;
+let unsubscribe = null;
+
+/* ============ CALC ============ */
 function calcRecord(r) {
   const revenue = r.sold * r.sellPrice;
   const cost = r.delivered * r.costPrice;
   return { revenue, cost, profit: revenue - cost, sedekah: r.delivered - r.sold };
 }
 
+/* ============ PREVIEW ============ */
 function updatePreview() {
   const delivered = parseInt(deliveredInput.value) || 0;
   const sold = parseInt(soldInput.value) || 0;
   const cost = parseFloat(costInput.value) || 0;
   const price = LOCATIONS[locInput.value].price;
 
-  if (delivered < 0 || sold < 0 || sold > delivered) {
+  if (sold > delivered) {
     previewEl.innerHTML = '<span style="color:var(--red);">⚠️ Jual tak boleh melebihi hantar.</span>';
     return;
   }
   const revenue = sold * price;
   const totalCost = delivered * cost;
   const profit = revenue - totalCost;
-  const sedekah = delivered - sold;
   previewEl.innerHTML = `
     <div class="preview-row"><span>Harga Jual</span><strong>${fmt(price)} × ${sold} = ${fmt(revenue)}</strong></div>
     <div class="preview-row"><span>Jumlah Kos</span><strong>${fmt(cost)} × ${delivered} = ${fmt(totalCost)}</strong></div>
-    <div class="preview-row"><span>Sedekah</span><strong>${sedekah} unit</strong></div>
+    <div class="preview-row"><span>Sedekah</span><strong>${delivered - sold} unit</strong></div>
     <div class="preview-row"><span>Untung/Rugi</span>
       <strong style="color:${profit>=0?'var(--green)':'var(--red)'}">${fmt(profit)}</strong>
     </div>
   `;
 }
-[deliveredInput, soldInput, costInput, locInput].forEach(el =>
-  el.addEventListener('input', updatePreview)
-);
+[deliveredInput, soldInput, costInput, locInput].forEach(el => el.addEventListener('input', updatePreview));
 
+/* ============ SUBMIT ============ */
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const date = dateInput.value;
-  const location = locInput.value;
   const delivered = parseInt(deliveredInput.value);
   const sold = parseInt(soldInput.value);
-  const costPrice = parseFloat(costInput.value);
-
-  if (!date || delivered < 1 || sold < 0 || sold > delivered) {
-    alert('Sila semak nilai hantar/jual.');
-    return;
-  }
-  const sellPrice = LOCATIONS[location].price;
+  if (sold > delivered) return alert('Jual tak boleh melebihi hantar!');
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Menyimpan...';
   try {
     await addDoc(collection(db, 'records'), {
-      date, location, delivered, sold, costPrice, sellPrice,
+      date: dateInput.value,
+      location: locInput.value,
+      delivered, sold,
+      costPrice: parseFloat(costInput.value),
+      sellPrice: LOCATIONS[locInput.value].price,
       createdAt: serverTimestamp()
     });
     deliveredInput.value = 10;
     soldInput.value = 8;
     updatePreview();
   } catch (err) {
-    console.error(err);
     alert('Gagal simpan: ' + err.message);
   } finally {
     submitBtn.disabled = false;
@@ -256,31 +384,69 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-const q = query(collection(db, 'records'), orderBy('date', 'desc'));
-onSnapshot(q, snap => {
-  statusEl.textContent = '✅ Bersambung ke Firebase';
-  statusEl.style.color = 'var(--green)';
-  allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  render();
-}, err => {
-  statusEl.textContent = '❌ Ralat: ' + err.message;
-  statusEl.style.color = 'var(--red)';
-  console.error(err);
-  alert('Ralat baca data: ' + err.message + '\n\nKemungkinan:\n1. Firestore belum di-enable\n2. Rules tak benarkan baca');
-});
+/* ============ BULK SAVE ============ */
+window.bulkSave = async function() {
+  const date = $('bulkDate').value;
+  const cost = parseFloat($('bulkCost').value) || 0;
+  if (!date) return alert('Pilih tarikh');
 
+  const data = [
+    { loc: 'rnr',    d: +$('bulkRnrD').value,    s: +$('bulkRnrS').value },
+    { loc: 'masjid', d: +$('bulkMasjidD').value, s: +$('bulkMasjidS').value },
+    { loc: 'uniten', d: +$('bulkUnitenD').value, s: +$('bulkUnitenS').value }
+  ];
+  for (const row of data) {
+    if (row.s > row.d) return alert(`Jual ${LOCATIONS[row.loc].name} > hantar!`);
+  }
+
+  try {
+    for (const row of data) {
+      if (row.d === 0) continue;
+      await addDoc(collection(db, 'records'), {
+        date, location: row.loc, delivered: row.d, sold: row.s,
+        costPrice: cost, sellPrice: LOCATIONS[row.loc].price,
+        createdAt: serverTimestamp()
+      });
+    }
+    alert('✅ Semua rekod disimpan');
+  } catch (err) {
+    alert('Gagal: ' + err.message);
+  }
+};
+
+/* ============ REALTIME DATA ============ */
+function startData() {
+  if (unsubscribe) unsubscribe();
+  const q = query(collection(db, 'records'));
+  unsubscribe = onSnapshot(q, snap => {
+    statusEl.textContent = '✅ Bersambung';
+    statusEl.style.color = 'var(--green)';
+    allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+  }, err => {
+    statusEl.textContent = '❌ ' + err.message;
+    statusEl.style.color = 'var(--red)';
+    console.error(err);
+  });
+}
+
+/* ============ RENDER ALL ============ */
 function render() {
+  allRecords.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   renderToday();
   renderMonthly();
   renderTodayRecords();
+  renderChart();
+  renderTrend();
 }
 
+/* ============ TODAY ============ */
 function renderToday() {
   const today = new Date().toISOString().slice(0,10);
   const recs = allRecords.filter(r => r.date === today);
   const byLoc = {};
   Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0 });
-  let totalProfit = 0;
+  let totalProfit = 0, totalSedekah = 0;
 
   recs.forEach(r => {
     const c = calcRecord(r);
@@ -288,9 +454,10 @@ function renderToday() {
     byLoc[r.location].s += r.sold;
     byLoc[r.location].p += c.profit;
     totalProfit += c.profit;
+    totalSedekah += c.sedekah;
   });
 
-  todayStatsEl.innerHTML = Object.entries(LOCATIONS).map(([key, loc]) => {
+  $('todayStats').innerHTML = Object.entries(LOCATIONS).map(([key, loc]) => {
     const s = byLoc[key];
     const pctSold = s.d ? (s.s / s.d * 100) : 0;
     return `
@@ -302,113 +469,296 @@ function renderToday() {
         <div class="loc-row"><span>Untung</span>
           <strong class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</strong>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 
-  todayProfitEl.textContent = fmt(totalProfit);
-  todayProfitEl.classList.remove('profit', 'loss');
-  todayProfitEl.classList.add(totalProfit >= 0 ? 'profit' : 'loss');
+  $('todaySedekah').textContent = totalSedekah + ' unit';
+  $('todayProfit').textContent = fmt(totalProfit);
+  $('todayProfit').className = 'profit-big ' + (totalProfit >= 0 ? 'profit' : 'loss');
 }
 
+/* ============ MONTHLY ============ */
 function renderMonthly() {
-  const now = new Date();
-  const monthStr = now.toISOString().slice(0,7);
+  const monthStr = new Date().toISOString().slice(0,7);
   const recs = allRecords.filter(r => r.date.startsWith(monthStr));
-
   const byLoc = {};
   Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0, rev:0, cost:0 });
-  let totalD=0, totalS=0, totalP=0, totalRev=0, totalCost=0;
+  let T = { d:0, s:0, p:0, rev:0, cost:0 }, totalSedekah = 0;
 
   recs.forEach(r => {
     const c = calcRecord(r);
-    byLoc[r.location].d += r.delivered;
-    byLoc[r.location].s += r.sold;
-    byLoc[r.location].p += c.profit;
-    byLoc[r.location].rev += c.revenue;
+    byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
+    byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
     byLoc[r.location].cost += c.cost;
-    totalD += r.delivered;
-    totalS += r.sold;
-    totalP += c.profit;
-    totalRev += c.revenue;
-    totalCost += c.cost;
+    T.d += r.delivered; T.s += r.sold; T.p += c.profit;
+    T.rev += c.revenue; T.cost += c.cost;
+    totalSedekah += c.sedekah;
   });
 
   let rows = Object.entries(LOCATIONS).map(([key, loc]) => {
     const s = byLoc[key];
     const pctSold = s.d ? (s.s / s.d * 100) : 0;
     return `<tr>
-      <td>${loc.name}</td>
-      <td>${s.d}</td>
-      <td>${s.s}</td>
-      <td>${s.d - s.s}</td>
-      <td>${pct(pctSold)}</td>
-      <td>${fmt(s.rev)}</td>
-      <td>${fmt(s.cost)}</td>
+      <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d - s.s}</td>
+      <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
       <td class="${s.p>=0?'profit':'loss'}" style="font-weight:700;">${fmt(s.p)}</td>
     </tr>`;
   }).join('');
 
-  const totalPct = totalD ? (totalS / totalD * 100) : 0;
+  const totalPct = T.d ? (T.s / T.d * 100) : 0;
   rows += `<tr style="background:var(--green-light); font-weight:700;">
-    <td>JUMLAH</td>
-    <td>${totalD}</td>
-    <td>${totalS}</td>
-    <td>${totalD - totalS}</td>
-    <td>${pct(totalPct)}</td>
-    <td>${fmt(totalRev)}</td>
-    <td>${fmt(totalCost)}</td>
-    <td class="${totalP>=0?'profit':'loss'}">${fmt(totalP)}</td>
+    <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d - T.s}</td>
+    <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
+    <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
   </tr>`;
 
-  monthlyStatsEl.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
-          <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
+  $('monthlyStats').innerHTML = `<table><thead><tr>
+    <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
+    <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+
+  $('monthlySedekah').textContent = totalSedekah + ' unit';
 }
 
+/* ============ TODAY RECORDS + EDIT/DELETE ============ */
 function renderTodayRecords() {
   const today = new Date().toISOString().slice(0,10);
   const recs = allRecords.filter(r => r.date === today);
-
   if (!recs.length) {
-    todayRecordsEl.innerHTML = '<div class="empty">Belum ada rekod hari ini.</div>';
+    $('todayRecords').innerHTML = '<div class="empty">Belum ada rekod hari ini.</div>';
     return;
   }
 
-  todayRecordsEl.innerHTML = recs.map(r => {
+  $('todayRecords').innerHTML = recs.map(r => {
     const c = calcRecord(r);
     const loc = LOCATIONS[r.location];
-    return `
-      <div class="record-item" style="border-left-color:${c.profit>=0?'var(--green)':'var(--red)'}">
-        <div class="info">
-          <strong>${loc.name}</strong><br>
-          <span style="color:var(--gray); font-size:0.82rem;">
-            Hantar ${r.delivered} · Jual ${r.sold} · Sedekah ${c.sedekah} ·
-            <span class="${c.profit>=0?'profit':'loss'}" style="font-weight:700;">${fmt(c.profit)}</span>
-          </span>
-        </div>
-        <button class="del-btn" data-id="${r.id}">Padam</button>
+    return `<div class="record-item" style="border-left-color:${c.profit>=0?'var(--green)':'var(--red)'}">
+      <div class="info">
+        <strong>${loc.name}</strong><br>
+        <span style="color:var(--gray); font-size:0.8rem;">
+          Hantar ${r.delivered} · Jual ${r.sold} · Sedekah ${c.sedekah} ·
+          <span class="${c.profit>=0?'profit':'loss'}" style="font-weight:700;">${fmt(c.profit)}</span>
+        </span>
       </div>
-    `;
+      <div class="actions">
+        <button class="btn-amber btn-sm" data-edit="${r.id}">✏️</button>
+        <button class="btn-red btn-sm" data-del="${r.id}">🗑️</button>
+      </div>
+    </div>`;
   }).join('');
 
-  todayRecordsEl.querySelectorAll('.del-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+  $('todayRecords').querySelectorAll('[data-del]').forEach(b => {
+    b.onclick = async () => {
       if (!confirm('Padam rekod ini?')) return;
+      try { await deleteDoc(doc(db, 'records', b.dataset.del)); }
+      catch (e) { alert(e.message); }
+    };
+  });
+
+  $('todayRecords').querySelectorAll('[data-edit]').forEach(b => {
+    b.onclick = async () => {
+      const rec = allRecords.find(r => r.id === b.dataset.edit);
+      if (!rec) return;
+      const d = prompt('Hantar:', rec.delivered);
+      if (d === null) return;
+      const s = prompt('Jual:', rec.sold);
+      if (s === null) return;
+      if (+s > +d) return alert('Jual tak boleh lebih hantar!');
       try {
-        await deleteDoc(doc(db, 'records', btn.dataset.id));
-      } catch (err) {
-        alert('Gagal padam: ' + err.message);
-      }
-    });
+        await updateDoc(doc(db, 'records', rec.id), {
+          delivered: +d, sold: +s
+        });
+      } catch (e) { alert(e.message); }
+    };
+  });
+}
+
+/* ============ CHART ============ */
+function renderChart() {
+  const days = [], profits = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const dayRecs = allRecords.filter(r => r.date === ds);
+    profits.push(dayRecs.reduce((s,r) => s + calcRecord(r).profit, 0));
+    days.push(ds.slice(5));
+  }
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart($('profitChart'), {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Untung (RM)',
+        data: profits,
+        backgroundColor: profits.map(p => p >= 0 ? '#16a34a' : '#dc2626'),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+}
+
+/* ============ TREND ANALYSIS ============ */
+function renderTrend() {
+  const byDate = {};
+  allRecords.forEach(r => {
+    if (!byDate[r.date]) byDate[r.date] = { profit: 0, delivered: 0, sold: 0 };
+    const c = calcRecord(r);
+    byDate[r.date].profit += c.profit;
+    byDate[r.date].delivered += r.delivered;
+    byDate[r.date].sold += r.sold;
+  });
+  const entries = Object.entries(byDate);
+  if (entries.length < 2) {
+    $('trendInfo').innerHTML = '<div class="empty">Perlu sekurang-kurangnya 2 hari data</div>';
+    return;
+  }
+  entries.sort((a,b) => b[1].profit - a[1].profit);
+  const best = entries[0], worst = entries[entries.length-1];
+  const avg = entries.reduce((s,x) => s + x[1].profit, 0) / entries.length;
+  const totalDays = entries.length;
+  const totalProfit = entries.reduce((s,x) => s + x[1].profit, 0);
+  const totalPct = entries.reduce((s,x) => s + x[1].sold, 0) / entries.reduce((s,x) => s + x[1].delivered, 0) * 100;
+
+  $('trendInfo').innerHTML = `
+    <div class="trend-row"><span>🏆 Hari Terbaik</span><strong class="profit">${best[0]} — ${fmt(best[1].profit)}</strong></div>
+    <div class="trend-row"><span>📉 Hari Terburuk</span><strong class="loss">${worst[0]} — ${fmt(worst[1].profit)}</strong></div>
+    <div class="trend-row"><span>📊 Purata Harian</span><strong>${fmt(avg)}</strong></div>
+    <div class="trend-row"><span>💰 Jumlah Untung (${totalDays} hari)</span><strong class="profit">${fmt(totalProfit)}</strong></div>
+    <div class="trend-row"><span>🎯 Purata % Terjual</span><strong>${pct(totalPct)}</strong></div>
+  `;
+}
+
+/* ============ CUSTOM REPORT ============ */
+window.generateCustomReport = function() {
+  const from = $('filterFrom').value;
+  const to = $('filterTo').value;
+  if (!from || !to) return alert('Sila pilih tarikh dari & hingga');
+  if (from > to) return alert('Tarikh "dari" mesti sebelum "hingga"');
+
+  const recs = allRecords.filter(r => r.date >= from && r.date <= to);
+  if (!recs.length) {
+    $('customReport').innerHTML = '<div class="empty">Tiada rekod dalam julat ini</div>';
+    return;
+  }
+
+  const byLoc = {};
+  Object.keys(LOCATIONS).forEach(k => byLoc[k] = { d:0, s:0, p:0, rev:0, cost:0 });
+  let T = { d:0, s:0, p:0, rev:0, cost:0 }, sedekah = 0;
+
+  recs.forEach(r => {
+    const c = calcRecord(r);
+    byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
+    byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
+    byLoc[r.location].cost += c.cost;
+    T.d += r.delivered; T.s += r.sold; T.p += c.profit;
+    T.rev += c.revenue; T.cost += c.cost;
+    sedekah += c.sedekah;
+  });
+
+  let html = `<div style="margin-bottom:12px; color:var(--gray); font-size:0.88rem;">
+    ${recs.length} rekod · ${from} → ${to} · Sedekah: <strong>${sedekah} unit</strong>
+  </div>`;
+  html += `<div style="overflow-x:auto;"><table><thead><tr>
+    <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
+    <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
+  </tr></thead><tbody>`;
+
+  Object.entries(LOCATIONS).forEach(([k, loc]) => {
+    const s = byLoc[k];
+    const pctSold = s.d ? (s.s/s.d*100) : 0;
+    html += `<tr>
+      <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
+      <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
+      <td class="${s.p>=0?'profit':'loss'}" style="font-weight:700;">${fmt(s.p)}</td>
+    </tr>`;
+  });
+
+  const totalPct = T.d ? (T.s/T.d*100) : 0;
+  html += `<tr style="background:var(--green-light); font-weight:700;">
+    <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d-T.s}</td>
+    <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
+    <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
+  </tr></tbody></table></div>`;
+
+  $('customReport').innerHTML = html;
+};
+
+/* ============ EXPORT CSV ============ */
+function buildCSV(recs, filename) {
+  const headers = ['Tarikh','Tempat','Hantar','Jual','Sedekah','Harga Kos','Harga Jual','Jualan(RM)','Kos(RM)','Untung(RM)','% Jual'];
+  const rows = recs.map(r => {
+    const c = calcRecord(r);
+    const pctSold = r.delivered ? (r.sold / r.delivered * 100).toFixed(1) : '0';
+    return [r.date, LOCATIONS[r.location].name, r.delivered, r.sold,
+      c.sedekah, r.costPrice.toFixed(2), r.sellPrice.toFixed(2),
+      c.revenue.toFixed(2), c.cost.toFixed(2), c.profit.toFixed(2), pctSold];
+  });
+  const csv = [headers, ...rows].map(row => row.map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
+window.exportCSV = function() {
+  const monthStr = new Date().toISOString().slice(0,7);
+  const recs = allRecords.filter(r => r.date.startsWith(monthStr));
+  if (!recs.length) return alert('Tiada rekod bulan ini');
+  buildCSV(recs, `jualan-${monthStr}.csv`);
+};
+
+window.exportCSVAll = function() {
+  if (!allRecords.length) return alert('Tiada rekod');
+  buildCSV(allRecords, `jualan-semua-${new Date().toISOString().slice(0,10)}.csv`);
+};
+
+/* ============ AUTH ============ */
+window.doLogin = async function() {
+  const email = $('loginEmail').value;
+  const pass = $('loginPassword').value;
+  const errEl = $('loginError');
+  errEl.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    errEl.textContent = 'Ralat: ' + e.message;
+  }
+};
+
+window.doLogout = async function() {
+  if (auth) await signOut(auth);
+};
+
+if (REQUIRE_AUTH) {
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginScreen.classList.add('hidden');
+      appEl.classList.remove('hidden');
+      logoutBtn.classList.remove('hidden');
+      logoutBtn.textContent = 'Log Keluar (' + user.email + ')';
+      startData();
+    } else {
+      loginScreen.classList.remove('hidden');
+      appEl.classList.add('hidden');
+      logoutBtn.classList.add('hidden');
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    }
+  });
+} else {
+  startData();
+}
+
+/* ============ PWA SERVICE WORKER ============ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
 
