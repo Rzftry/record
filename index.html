@@ -5,97 +5,175 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Rekod Jualan — Nadiah Homemade</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#16a34a">
+<meta name="theme-color" content="#14b8a6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --green: #16a34a; --green-dark: #166534; --green-light: #dcfce7;
-    --red: #dc2626; --red-light: #fee2e2; --gray: #6b7280;
-    --amber: #f59e0b; --blue: #3b82f6;
+    --teal: #14b8a6; --teal-dark: #0d9488; --teal-light: #ccfbf1;
+    --pink: #f472b6; --pink-dark: #ec4899; --pink-light: #fce7f3;
+    --yellow: #fbbf24; --yellow-light: #fef9c3;
+    --purple: #a78bfa; --orange: #fb923c; --blue: #38bdf8;
+    --green: #10b981; --red: #ef4444; --gray: #64748b; --dark: #0f172a;
   }
   * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
   body {
     margin: 0; padding: 16px;
-    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
-    color: #064e3b; min-height: 100vh;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(251,191,36,0.18) 0%, transparent 35%),
+      radial-gradient(circle at 90% 10%, rgba(244,114,182,0.15) 0%, transparent 35%),
+      radial-gradient(circle at 90% 90%, rgba(20,184,166,0.18) 0%, transparent 35%),
+      radial-gradient(circle at 10% 90%, rgba(167,139,250,0.15) 0%, transparent 35%),
+      linear-gradient(135deg, #fefce8 0%, #ecfeff 50%, #fdf2f8 100%);
+    background-attachment: fixed;
+    color: var(--dark); min-height: 100vh;
   }
   .container { max-width: 1000px; margin: 0 auto; padding-bottom: 40px; }
-  h1 { color: var(--green-dark); font-size: 1.5rem; margin: 8px 0 16px; }
-  h2 { color: var(--green-dark); font-size: 1.1rem; margin: 0 0 12px; }
-  .card {
-    background: #fff; border-radius: 12px; padding: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 16px;
-    border-top: 4px solid var(--green);
+  h1 {
+    font-size: 1.55rem; font-weight: 800; text-align: center; margin: 8px 0 4px;
+    background: linear-gradient(90deg, #14b8a6, #f472b6, #fbbf24, #14b8a6);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shine 4s linear infinite;
   }
+  @keyframes shine { to { background-position: 200% center; } }
+  .subtitle { text-align: center; color: var(--gray); font-size: 0.85rem; margin-bottom: 20px; font-style: italic; }
+  h2 { color: var(--teal-dark); font-size: 1.1rem; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 2px dashed #a7f3d0; }
+  .card {
+    background: #fff; border-radius: 18px; padding: 20px;
+    box-shadow: 0 4px 20px rgba(20,184,166,0.1); margin-bottom: 16px;
+    border-top: 4px solid var(--teal);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(20,184,166,0.18); }
+  .card:nth-of-type(2) { border-top-color: var(--pink); }
+  .card:nth-of-type(3) { border-top-color: var(--yellow); }
+  .card:nth-of-type(4) { border-top-color: var(--purple); }
+  .card:nth-of-type(5) { border-top-color: var(--orange); }
+  .card:nth-of-type(6) { border-top-color: var(--blue); }
+  .card:nth-of-type(7) { border-top-color: var(--green); }
+  .card:nth-of-type(8) { border-top-color: var(--pink); }
   .grid { display: grid; gap: 12px; }
   .grid-2 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-  label { display: block; font-size: 0.82rem; color: var(--gray); margin-bottom: 4px; font-weight: 600; }
+  label { display: block; font-size: 0.82rem; color: var(--teal-dark); margin-bottom: 4px; font-weight: 700; }
   input, select {
-    width: 100%; padding: 10px; border: 1.5px solid #d1fae5;
-    border-radius: 8px; font-size: 1rem; background: #f9fefb; color: #064e3b;
+    width: 100%; padding: 10px 12px; border: 2px solid #e0f2fe;
+    border-radius: 10px; font-size: 1rem; background: #f0fdfa; color: var(--dark);
+    transition: all 0.2s;
   }
-  input:focus, select:focus { outline: none; border-color: var(--green); }
+  input:focus, select:focus {
+    outline: none; border-color: var(--teal); background: #fff;
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.15);
+  }
   button {
-    background: var(--green); color: white; border: none;
-    padding: 12px 20px; border-radius: 8px; font-size: 0.95rem;
-    font-weight: 600; cursor: pointer; transition: background 0.15s;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: white;
+    border: none; padding: 12px 20px; border-radius: 10px; font-size: 0.95rem;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(20,184,166,0.3);
   }
-  button:hover { background: var(--green-dark); }
-  button:disabled { background: #9ca3af; cursor: not-allowed; }
-  .btn-amber { background: var(--amber); } .btn-amber:hover { background: #d97706; }
-  .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2563eb; }
-  .btn-red { background: var(--red); } .btn-red:hover { background: #991b1b; }
+  button:hover {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    transform: translateY(-1px); box-shadow: 0 6px 18px rgba(20,184,166,0.4);
+  }
+  button:active { transform: translateY(0); }
+  button:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+  .btn-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 4px 12px rgba(251,191,36,0.3); }
+  .btn-amber:hover { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 6px 18px rgba(251,191,36,0.4); }
+  .btn-blue { background: linear-gradient(135deg, #38bdf8, #0ea5e9); box-shadow: 0 4px 12px rgba(56,189,248,0.3); }
+  .btn-blue:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 6px 18px rgba(56,189,248,0.4); }
+  .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+  .btn-red:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); box-shadow: 0 6px 18px rgba(239,68,68,0.4); }
   .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
   .profit-big {
     font-size: 2rem; font-weight: 800; text-align: center;
-    padding: 16px; border-radius: 10px; margin-top: 12px;
+    padding: 18px; border-radius: 14px; margin-top: 12px; transition: all 0.3s;
   }
-  .profit-big.profit { color: var(--green); background: var(--green-light); }
-  .profit-big.loss { color: var(--red); background: var(--red-light); }
-  .profit { color: var(--green); }
-  .loss { color: var(--red); }
+  .profit-big.profit {
+    color: #059669; background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    box-shadow: 0 4px 16px rgba(16,185,129,0.25);
+  }
+  .profit-big.loss {
+    color: #dc2626; background: linear-gradient(135deg, #fee2e2, #fecaca);
+    box-shadow: 0 4px 16px rgba(239,68,68,0.25);
+  }
+  .profit { color: #059669; font-weight: 700; }
+  .loss { color: #dc2626; font-weight: 700; }
   .loc-card {
-    background: #f9fefb; border: 1.5px solid #d1fae5;
-    border-radius: 10px; padding: 12px;
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    border: 2px solid #99f6e4; border-radius: 12px; padding: 14px;
+    transition: transform 0.2s;
   }
-  .loc-card h3 { margin: 0 0 8px; font-size: 1rem; color: var(--green-dark); }
-  .loc-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 2px 0; }
+  .loc-card:nth-child(2) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); border-color: #fbcfe8; }
+  .loc-card:nth-child(3) { background: linear-gradient(135deg, #fefce8, #fef9c3); border-color: #fde68a; }
+  .loc-card:hover { transform: scale(1.02); }
+  .loc-card h3 { margin: 0 0 8px; font-size: 1rem; color: var(--teal-dark); }
+  .loc-card:nth-child(2) h3 { color: var(--pink-dark); }
+  .loc-card:nth-child(3) h3 { color: #b45309; }
+  .loc-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 3px 0; }
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { text-align: left; padding: 8px; background: var(--green-light); color: var(--green-dark); font-size: 0.78rem; white-space: nowrap; }
-  td { padding: 8px; border-bottom: 1px solid #ecfdf5; white-space: nowrap; }
+  th {
+    text-align: left; padding: 10px 8px;
+    background: linear-gradient(90deg, var(--teal-light), var(--pink-light));
+    color: var(--teal-dark); font-size: 0.78rem; white-space: nowrap;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 9px 8px; border-bottom: 1px solid #f0fdfa; white-space: nowrap; }
+  tr:hover td { background: #f0fdfa; }
   .record-item {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 10px; border-radius: 8px; background: #f9fefb;
-    margin-bottom: 8px; border-left: 4px solid var(--green); gap: 8px;
+    padding: 12px; border-radius: 10px;
+    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+    margin-bottom: 8px; border-left: 4px solid var(--teal); gap: 8px;
+    transition: transform 0.15s;
   }
+  .record-item:hover { transform: translateX(2px); }
   .record-item .info { font-size: 0.88rem; flex: 1; }
   .record-item .actions { display: flex; gap: 4px; }
-  .empty { color: var(--gray); text-align: center; padding: 16px; font-style: italic; }
+  .empty {
+    color: var(--gray); text-align: center; padding: 20px;
+    font-style: italic; background: #f8fafc; border-radius: 10px;
+  }
   .status { font-size: 0.75rem; color: var(--gray); text-align: right; padding: 4px 0; }
   .sedekah-box {
-    padding: 10px; background: var(--green-light); border-radius: 8px;
-    margin-top: 12px; display: flex; justify-content: space-between;
-    align-items: center; font-weight: 600;
+    padding: 12px 14px; background: linear-gradient(135deg, #fef9c3, #fde68a);
+    border-radius: 10px; margin-top: 12px; display: flex; justify-content: space-between;
+    align-items: center; font-weight: 700; color: #92400e;
+    border: 2px solid #fcd34d;
   }
-  .bulk-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: end; }
-  @media (max-width: 640px) { .bulk-row { grid-template-columns: 1fr 1fr; } .bulk-row .loc-name { grid-column: span 2; } }
-  .bulk-row .loc-name { font-weight: 600; font-size: 0.88rem; color: var(--green-dark); padding-bottom: 10px; }
-  .trend-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.88rem; border-bottom: 1px dashed #d1fae5; }
+  .bulk-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px;
+    margin-bottom: 10px; align-items: end; padding: 10px;
+    border-radius: 10px; background: #f8fafc;
+  }
+  .bulk-row:nth-of-type(2) { background: linear-gradient(135deg, #f0fdfa, #ecfeff); }
+  .bulk-row:nth-of-type(3) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); }
+  .bulk-row:nth-of-type(4) { background: linear-gradient(135deg, #fefce8, #fef9c3); }
+  @media (max-width: 640px) {
+    .bulk-row { grid-template-columns: 1fr 1fr; }
+    .bulk-row .loc-name { grid-column: span 2; }
+  }
+  .bulk-row .loc-name { font-weight: 700; font-size: 0.9rem; color: var(--teal-dark); padding-bottom: 10px; }
+  .trend-row {
+    display: flex; justify-content: space-between; padding: 8px 0;
+    font-size: 0.88rem; border-bottom: 1px dashed #a7f3d0;
+  }
   .trend-row:last-child { border-bottom: none; }
   .login-screen {
-    position: fixed; inset: 0; background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
-    display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 999;
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #fefce8, #ecfeff, #fdf2f8);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 999;
   }
   .login-box {
-    background: #fff; padding: 28px; border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12); width: 100%; max-width: 360px;
-    border-top: 4px solid var(--green);
+    background: #fff; padding: 32px; border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(20,184,166,0.2);
+    width: 100%; max-width: 360px; border-top: 5px solid var(--teal);
   }
-  .login-box h2 { text-align: center; margin-bottom: 20px; }
+  .login-box h2 { text-align: center; margin-bottom: 20px; border: none; padding: 0; font-size: 1.3rem; }
   .login-box input { margin-bottom: 12px; }
   .login-box button { width: 100%; }
   .logout-bar {
@@ -103,12 +181,11 @@
     font-size: 0.8rem; color: var(--gray); margin-bottom: 8px;
   }
   .hidden { display: none !important; }
-  .date-hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; }
+  .date-hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-screen hidden">
   <div class="login-box">
     <h2>🔐 Log Masuk</h2>
@@ -119,47 +196,46 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="app" class="container">
-  <h1>🌿 Rekod Jualan — Nadiah Homemade</h1>
+  <h1>🌿 Rekod Jualan Nadiah Homemade</h1>
+  <div class="subtitle">Jom catat jualan hari ini! 🚀</div>
   <div class="logout-bar">
     <span class="status" id="status">Menyambung...</span>
     <button id="logoutBtn" class="btn-sm btn-red hidden" onclick="doLogout()">Log Keluar</button>
   </div>
 
-  <!-- BULK ENTRY (SATU-SATUNYA INPUT) -->
+  <!-- REKOD PANTAS -->
   <div class="card">
     <h2>⚡ Rekod Pantas — 3 Tempat Sekali</h2>
     <div class="grid grid-2" style="margin-bottom:12px;">
       <div>
-        <label>Tarikh</label>
+        <label>📅 Tarikh</label>
         <input type="date" id="bulkDate">
         <div class="date-hint" id="bulkDateDisplay"></div>
       </div>
       <div>
-        <label>Harga Kos (RM)</label>
+        <label>💰 Harga Kos (RM)</label>
         <input type="number" id="bulkCost" min="0" step="0.01" value="2">
       </div>
     </div>
     <div class="bulk-row">
-      <span class="loc-name">R&R — RM5.00</span>
+      <span class="loc-name">🏪 R&R — RM5.00</span>
       <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkRnrD" value="10" min="0"></div>
       <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkRnrS" value="8" min="0"></div>
     </div>
     <div class="bulk-row">
-      <span class="loc-name">Masjid D'warung — RM4.50</span>
+      <span class="loc-name">🕌 Masjid D'warung — RM4.50</span>
       <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkMasjidD" value="10" min="0"></div>
       <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkMasjidS" value="8" min="0"></div>
     </div>
     <div class="bulk-row">
-      <span class="loc-name">Uniten — RM5.00</span>
+      <span class="loc-name">🎓 Uniten — RM5.00</span>
       <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkUnitenD" value="10" min="0"></div>
       <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkUnitenS" value="8" min="0"></div>
     </div>
-    <button onclick="bulkSave()" style="margin-top:8px; width:100%;">💾 Simpan Semua 3 Tempat</button>
+    <button onclick="bulkSave()" style="margin-top:12px; width:100%;">💾 Simpan Semua 3 Tempat</button>
   </div>
 
-  <!-- RINGKASAN HARI INI -->
   <div class="card">
     <h2>📊 Ringkasan Hari Ini</h2>
     <div id="todayStats" class="grid grid-3"></div>
@@ -173,19 +249,16 @@
     </div>
   </div>
 
-  <!-- CHART -->
   <div class="card">
     <h2>📈 Trend Untung 7 Hari Terakhir</h2>
     <canvas id="profitChart" height="140"></canvas>
   </div>
 
-  <!-- TREND ANALYSIS -->
   <div class="card">
     <h2>🏆 Analisis Prestasi</h2>
     <div id="trendInfo"><div class="empty">Belum cukup data</div></div>
   </div>
 
-  <!-- RINGKASAN BULANAN -->
   <div class="card">
     <h2>📅 Ringkasan Bulanan</h2>
     <div id="monthlyStats" style="overflow-x:auto;"></div>
@@ -195,17 +268,16 @@
     </div>
   </div>
 
-  <!-- CUSTOM FILTER -->
   <div class="card">
     <h2>🔍 Laporan Custom</h2>
     <div class="grid grid-2" style="margin-bottom:12px;">
       <div>
-        <label>Dari Tarikh</label>
+        <label>📅 Dari Tarikh</label>
         <input type="date" id="filterFrom">
         <div class="date-hint" id="filterFromDisplay"></div>
       </div>
       <div>
-        <label>Hingga Tarikh</label>
+        <label>📅 Hingga Tarikh</label>
         <input type="date" id="filterTo">
         <div class="date-hint" id="filterToDisplay"></div>
       </div>
@@ -214,7 +286,6 @@
     <div id="customReport" style="margin-top:16px;"></div>
   </div>
 
-  <!-- REKOD HARI INI -->
   <div class="card">
     <h2>📝 Rekod Hari Ini</h2>
     <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
@@ -235,7 +306,6 @@ import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-/* ============ CONFIG ============ */
 const firebaseConfig = {
   apiKey: "AIzaSyCmqerXQXrZ2N-QaYv4IXXhS1LaXFx_-2g",
   authDomain: "nadiahhomemade.firebaseapp.com",
@@ -253,30 +323,16 @@ const LOCATIONS = {
   uniten: { name: "Uniten",          price: 5   }
 };
 
-/* ============ INIT ============ */
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = REQUIRE_AUTH ? getAuth(app) : null;
 
-/* ============ HELPERS ============ */
 const $ = id => document.getElementById(id);
 const fmt = n => 'RM ' + n.toFixed(2);
 const pct = n => n.toFixed(1) + '%';
+const fmtDate = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; };
+const fmtShort = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}`; };
 
-// Tukar ISO date (YYYY-MM-DD) → DD/MM/YYYY
-const fmtDate = iso => {
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-');
-  return `${d}/${m}/${y}`;
-};
-// Untuk label chart: DD/MM
-const fmtShort = iso => {
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-');
-  return `${d}/${m}`;
-};
-
-/* ============ ELEMENTS ============ */
 const statusEl = $('status');
 const loginScreen = $('loginScreen');
 const appEl = $('app');
@@ -289,14 +345,12 @@ let allRecords = [];
 let chartInstance = null;
 let unsubscribe = null;
 
-/* ============ CALC ============ */
 function calcRecord(r) {
   const revenue = r.sold * r.sellPrice;
   const cost = r.delivered * r.costPrice;
   return { revenue, cost, profit: revenue - cost, sedekah: r.delivered - r.sold };
 }
 
-/* ============ BULK SAVE ============ */
 window.bulkSave = async function() {
   const date = $('bulkDate').value;
   const cost = parseFloat($('bulkCost').value) || 0;
@@ -310,7 +364,6 @@ window.bulkSave = async function() {
   for (const row of data) {
     if (row.s > row.d) return alert(`Jual ${LOCATIONS[row.loc].name} > hantar!`);
   }
-
   try {
     for (const row of data) {
       if (row.d === 0) continue;
@@ -321,28 +374,24 @@ window.bulkSave = async function() {
       });
     }
     alert(`✅ Rekod ${fmtDate(date)} disimpan`);
-  } catch (err) {
-    alert('Gagal: ' + err.message);
-  }
+  } catch (err) { alert('Gagal: ' + err.message); }
 };
 
-/* ============ REALTIME DATA ============ */
 function startData() {
   if (unsubscribe) unsubscribe();
   const q = query(collection(db, 'records'));
   unsubscribe = onSnapshot(q, snap => {
     statusEl.textContent = '✅ Bersambung';
-    statusEl.style.color = 'var(--green)';
+    statusEl.style.color = '#10b981';
     allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     render();
   }, err => {
     statusEl.textContent = '❌ ' + err.message;
-    statusEl.style.color = 'var(--red)';
+    statusEl.style.color = '#ef4444';
     console.error(err);
   });
 }
 
-/* ============ RENDER ALL ============ */
 function render() {
   allRecords.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   renderToday();
@@ -352,7 +401,6 @@ function render() {
   renderTrend();
 }
 
-/* ============ TODAY ============ */
 function renderToday() {
   const today = new Date().toISOString().slice(0,10);
   const recs = allRecords.filter(r => r.date === today);
@@ -372,16 +420,13 @@ function renderToday() {
   $('todayStats').innerHTML = Object.entries(LOCATIONS).map(([key, loc]) => {
     const s = byLoc[key];
     const pctSold = s.d ? (s.s / s.d * 100) : 0;
-    return `
-      <div class="loc-card">
-        <h3>${loc.name}</h3>
-        <div class="loc-row"><span>Hantar</span><strong>${s.d}</strong></div>
-        <div class="loc-row"><span>Jual</span><strong>${s.s}</strong></div>
-        <div class="loc-row"><span>% Jual</span><strong>${pct(pctSold)}</strong></div>
-        <div class="loc-row"><span>Untung</span>
-          <strong class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</strong>
-        </div>
-      </div>`;
+    return `<div class="loc-card">
+      <h3>${loc.name}</h3>
+      <div class="loc-row"><span>Hantar</span><strong>${s.d}</strong></div>
+      <div class="loc-row"><span>Jual</span><strong>${s.s}</strong></div>
+      <div class="loc-row"><span>% Jual</span><strong>${pct(pctSold)}</strong></div>
+      <div class="loc-row"><span>Untung</span><strong class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</strong></div>
+    </div>`;
   }).join('');
 
   $('todaySedekah').textContent = totalSedekah + ' unit';
@@ -389,7 +434,6 @@ function renderToday() {
   $('todayProfit').className = 'profit-big ' + (totalProfit >= 0 ? 'profit' : 'loss');
 }
 
-/* ============ MONTHLY ============ */
 function renderMonthly() {
   const monthStr = new Date().toISOString().slice(0,7);
   const recs = allRecords.filter(r => r.date.startsWith(monthStr));
@@ -413,12 +457,12 @@ function renderMonthly() {
     return `<tr>
       <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d - s.s}</td>
       <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
-      <td class="${s.p>=0?'profit':'loss'}" style="font-weight:700;">${fmt(s.p)}</td>
+      <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
     </tr>`;
   }).join('');
 
   const totalPct = T.d ? (T.s / T.d * 100) : 0;
-  rows += `<tr style="background:var(--green-light); font-weight:700;">
+  rows += `<tr style="background:linear-gradient(90deg,#ccfbf1,#fce7f3); font-weight:700;">
     <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d - T.s}</td>
     <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
     <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
@@ -432,24 +476,23 @@ function renderMonthly() {
   $('monthlySedekah').textContent = totalSedekah + ' unit';
 }
 
-/* ============ TODAY RECORDS + EDIT/DELETE ============ */
 function renderTodayRecords() {
   const today = new Date().toISOString().slice(0,10);
   const recs = allRecords.filter(r => r.date === today);
   if (!recs.length) {
-    $('todayRecords').innerHTML = '<div class="empty">Belum ada rekod hari ini.</div>';
+    $('todayRecords').innerHTML = '<div class="empty">Belum ada rekod hari ini 🍃</div>';
     return;
   }
 
   $('todayRecords').innerHTML = recs.map(r => {
     const c = calcRecord(r);
     const loc = LOCATIONS[r.location];
-    return `<div class="record-item" style="border-left-color:${c.profit>=0?'var(--green)':'var(--red)'}">
+    return `<div class="record-item" style="border-left-color:${c.profit>=0?'#10b981':'#ef4444'}">
       <div class="info">
         <strong>${loc.name}</strong><br>
         <span style="color:var(--gray); font-size:0.8rem;">
           ${fmtDate(r.date)} · Hantar ${r.delivered} · Jual ${r.sold} · Sedekah ${c.sedekah} ·
-          <span class="${c.profit>=0?'profit':'loss'}" style="font-weight:700;">${fmt(c.profit)}</span>
+          <span class="${c.profit>=0?'profit':'loss'}">${fmt(c.profit)}</span>
         </span>
       </div>
       <div class="actions">
@@ -476,16 +519,12 @@ function renderTodayRecords() {
       const s = prompt('Jual:', rec.sold);
       if (s === null) return;
       if (+s > +d) return alert('Jual tak boleh lebih hantar!');
-      try {
-        await updateDoc(doc(db, 'records', rec.id), {
-          delivered: +d, sold: +s
-        });
-      } catch (e) { alert(e.message); }
+      try { await updateDoc(doc(db, 'records', rec.id), { delivered: +d, sold: +s }); }
+      catch (e) { alert(e.message); }
     };
   });
 }
 
-/* ============ CHART ============ */
 function renderChart() {
   const days = [], profits = [];
   for (let i = 6; i >= 0; i--) {
@@ -494,7 +533,7 @@ function renderChart() {
     const ds = d.toISOString().slice(0,10);
     const dayRecs = allRecords.filter(r => r.date === ds);
     profits.push(dayRecs.reduce((s,r) => s + calcRecord(r).profit, 0));
-    days.push(fmtShort(ds)); // DD/MM
+    days.push(fmtShort(ds));
   }
   if (chartInstance) chartInstance.destroy();
   chartInstance = new Chart($('profitChart'), {
@@ -504,8 +543,9 @@ function renderChart() {
       datasets: [{
         label: 'Untung (RM)',
         data: profits,
-        backgroundColor: profits.map(p => p >= 0 ? '#16a34a' : '#dc2626'),
-        borderRadius: 6
+        backgroundColor: profits.map(p => p >= 0 ? '#10b981' : '#ef4444'),
+        borderRadius: 8,
+        borderSkipped: false
       }]
     },
     options: {
@@ -515,7 +555,6 @@ function renderChart() {
   });
 }
 
-/* ============ TREND ANALYSIS ============ */
 function renderTrend() {
   const byDate = {};
   allRecords.forEach(r => {
@@ -546,7 +585,6 @@ function renderTrend() {
   `;
 }
 
-/* ============ CUSTOM REPORT ============ */
 window.generateCustomReport = function() {
   const from = $('filterFrom').value;
   const to = $('filterTo').value;
@@ -587,12 +625,12 @@ window.generateCustomReport = function() {
     html += `<tr>
       <td>${loc.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
       <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
-      <td class="${s.p>=0?'profit':'loss'}" style="font-weight:700;">${fmt(s.p)}</td>
+      <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
     </tr>`;
   });
 
   const totalPct = T.d ? (T.s/T.d*100) : 0;
-  html += `<tr style="background:var(--green-light); font-weight:700;">
+  html += `<tr style="background:linear-gradient(90deg,#ccfbf1,#fce7f3); font-weight:700;">
     <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d-T.s}</td>
     <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
     <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
@@ -601,7 +639,6 @@ window.generateCustomReport = function() {
   $('customReport').innerHTML = html;
 };
 
-/* ============ EXPORT CSV ============ */
 function buildCSV(recs, filename) {
   const headers = ['Tarikh','Tempat','Hantar','Jual','Sedekah','Harga Kos','Harga Jual','Jualan(RM)','Kos(RM)','Untung(RM)','% Jual'];
   const rows = recs.map(r => {
@@ -635,7 +672,6 @@ window.exportCSVAll = function() {
   buildCSV(allRecords, `jualan-semua-${dd}-${mm}-${now.getFullYear()}.csv`);
 };
 
-/* ============ DATE HINTS (display dd/mm/yyyy) ============ */
 $('bulkDate').addEventListener('input', e => {
   $('bulkDateDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
 });
@@ -645,25 +681,18 @@ $('filterFrom').addEventListener('input', e => {
 $('filterTo').addEventListener('input', e => {
   $('filterToDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
 });
-// Set hint untuk bulk date awal
 $('bulkDateDisplay').textContent = '📅 ' + fmtDate(todayStr);
 
-/* ============ AUTH ============ */
 window.doLogin = async function() {
   const email = $('loginEmail').value;
   const pass = $('loginPassword').value;
   const errEl = $('loginError');
   errEl.textContent = '';
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-  } catch (e) {
-    errEl.textContent = 'Ralat: ' + e.message;
-  }
+  try { await signInWithEmailAndPassword(auth, email, pass); }
+  catch (e) { errEl.textContent = 'Ralat: ' + e.message; }
 };
 
-window.doLogout = async function() {
-  if (auth) await signOut(auth);
-};
+window.doLogout = async function() { if (auth) await signOut(auth); };
 
 if (REQUIRE_AUTH) {
   onAuthStateChanged(auth, user => {
@@ -684,7 +713,6 @@ if (REQUIRE_AUTH) {
   startData();
 }
 
-/* ============ PWA ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
