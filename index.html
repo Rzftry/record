@@ -50,12 +50,6 @@
   .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2563eb; }
   .btn-red { background: var(--red); } .btn-red:hover { background: #991b1b; }
   .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
-  .preview {
-    background: var(--green-light); border-radius: 8px; padding: 12px;
-    margin: 12px 0; font-size: 0.9rem;
-  }
-  .preview-row { display: flex; justify-content: space-between; padding: 4px 0; }
-  .preview-row strong { color: var(--green-dark); }
   .profit-big {
     font-size: 2rem; font-weight: 800; text-align: center;
     padding: 16px; border-radius: 10px; margin-top: 12px;
@@ -87,9 +81,9 @@
     margin-top: 12px; display: flex; justify-content: space-between;
     align-items: center; font-weight: 600;
   }
-  .bulk-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .bulk-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 8px; align-items: end; }
   @media (max-width: 640px) { .bulk-row { grid-template-columns: 1fr 1fr; } .bulk-row .loc-name { grid-column: span 2; } }
-  .bulk-row .loc-name { font-weight: 600; font-size: 0.88rem; color: var(--green-dark); }
+  .bulk-row .loc-name { font-weight: 600; font-size: 0.88rem; color: var(--green-dark); padding-bottom: 10px; }
   .trend-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.88rem; border-bottom: 1px dashed #d1fae5; }
   .trend-row:last-child { border-bottom: none; }
   .login-screen {
@@ -109,6 +103,7 @@
     font-size: 0.8rem; color: var(--gray); margin-bottom: 8px;
   }
   .hidden { display: none !important; }
+  .date-hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -132,48 +127,14 @@
     <button id="logoutBtn" class="btn-sm btn-red hidden" onclick="doLogout()">Log Keluar</button>
   </div>
 
-  <!-- FORM BIASA -->
-  <div class="card">
-    <h2>➕ Tambah Rekod</h2>
-    <form id="recordForm">
-      <div class="grid grid-2">
-        <div>
-          <label>Tarikh</label>
-          <input type="date" id="dateInput" required>
-        </div>
-        <div>
-          <label>Tempat</label>
-          <select id="locInput" required>
-            <option value="rnr">R&R — RM5.00</option>
-            <option value="masjid">Masjid D'warung — RM4.50</option>
-            <option value="uniten">Uniten — RM5.00</option>
-          </select>
-        </div>
-        <div>
-          <label>Hantar (unit)</label>
-          <input type="number" id="deliveredInput" min="1" required value="10">
-        </div>
-        <div>
-          <label>Jual (unit)</label>
-          <input type="number" id="soldInput" min="0" required value="8">
-        </div>
-        <div>
-          <label>Harga Kos (RM)</label>
-          <input type="number" id="costInput" min="0" step="0.01" value="2" required>
-        </div>
-      </div>
-      <div class="preview" id="preview"></div>
-      <button type="submit" id="submitBtn">💾 Simpan Rekod</button>
-    </form>
-  </div>
-
-  <!-- BULK ENTRY -->
+  <!-- BULK ENTRY (SATU-SATUNYA INPUT) -->
   <div class="card">
     <h2>⚡ Rekod Pantas — 3 Tempat Sekali</h2>
     <div class="grid grid-2" style="margin-bottom:12px;">
       <div>
         <label>Tarikh</label>
         <input type="date" id="bulkDate">
+        <div class="date-hint" id="bulkDateDisplay"></div>
       </div>
       <div>
         <label>Harga Kos (RM)</label>
@@ -195,7 +156,7 @@
       <div><label style="font-size:0.72rem;">Hantar</label><input type="number" id="bulkUnitenD" value="10" min="0"></div>
       <div><label style="font-size:0.72rem;">Jual</label><input type="number" id="bulkUnitenS" value="8" min="0"></div>
     </div>
-    <button onclick="bulkSave()" style="margin-top:8px;">💾 Simpan Semua 3 Tempat</button>
+    <button onclick="bulkSave()" style="margin-top:8px; width:100%;">💾 Simpan Semua 3 Tempat</button>
   </div>
 
   <!-- RINGKASAN HARI INI -->
@@ -241,10 +202,12 @@
       <div>
         <label>Dari Tarikh</label>
         <input type="date" id="filterFrom">
+        <div class="date-hint" id="filterFromDisplay"></div>
       </div>
       <div>
         <label>Hingga Tarikh</label>
         <input type="date" id="filterTo">
+        <div class="date-hint" id="filterToDisplay"></div>
       </div>
     </div>
     <button onclick="generateCustomReport()">📊 Jana Laporan</button>
@@ -266,7 +229,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, onSnapshot, query,
-  deleteDoc, doc, serverTimestamp, updateDoc, getDocs
+  deleteDoc, doc, serverTimestamp, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -282,8 +245,6 @@ const firebaseConfig = {
   appId: "1:136280919426:web:f940be4772c69bed43d39b",
   measurementId: "G-N8RH3STX2T"
 };
-
-// Set true selepas setup Auth (rujuk langkah di bawah)
 const REQUIRE_AUTH = false;
 
 const LOCATIONS = {
@@ -297,27 +258,32 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = REQUIRE_AUTH ? getAuth(app) : null;
 
-/* ============ ELEMENTS ============ */
+/* ============ HELPERS ============ */
 const $ = id => document.getElementById(id);
-const form = $('recordForm');
-const dateInput = $('dateInput');
-const locInput = $('locInput');
-const deliveredInput = $('deliveredInput');
-const soldInput = $('soldInput');
-const costInput = $('costInput');
-const previewEl = $('preview');
-const submitBtn = $('submitBtn');
+const fmt = n => 'RM ' + n.toFixed(2);
+const pct = n => n.toFixed(1) + '%';
+
+// Tukar ISO date (YYYY-MM-DD) → DD/MM/YYYY
+const fmtDate = iso => {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+};
+// Untuk label chart: DD/MM
+const fmtShort = iso => {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}`;
+};
+
+/* ============ ELEMENTS ============ */
 const statusEl = $('status');
 const loginScreen = $('loginScreen');
 const appEl = $('app');
 const logoutBtn = $('logoutBtn');
 
 const todayStr = new Date().toISOString().slice(0,10);
-dateInput.value = todayStr;
 $('bulkDate').value = todayStr;
-
-const fmt = n => 'RM ' + n.toFixed(2);
-const pct = n => n.toFixed(1) + '%';
 
 let allRecords = [];
 let chartInstance = null;
@@ -329,60 +295,6 @@ function calcRecord(r) {
   const cost = r.delivered * r.costPrice;
   return { revenue, cost, profit: revenue - cost, sedekah: r.delivered - r.sold };
 }
-
-/* ============ PREVIEW ============ */
-function updatePreview() {
-  const delivered = parseInt(deliveredInput.value) || 0;
-  const sold = parseInt(soldInput.value) || 0;
-  const cost = parseFloat(costInput.value) || 0;
-  const price = LOCATIONS[locInput.value].price;
-
-  if (sold > delivered) {
-    previewEl.innerHTML = '<span style="color:var(--red);">⚠️ Jual tak boleh melebihi hantar.</span>';
-    return;
-  }
-  const revenue = sold * price;
-  const totalCost = delivered * cost;
-  const profit = revenue - totalCost;
-  previewEl.innerHTML = `
-    <div class="preview-row"><span>Harga Jual</span><strong>${fmt(price)} × ${sold} = ${fmt(revenue)}</strong></div>
-    <div class="preview-row"><span>Jumlah Kos</span><strong>${fmt(cost)} × ${delivered} = ${fmt(totalCost)}</strong></div>
-    <div class="preview-row"><span>Sedekah</span><strong>${delivered - sold} unit</strong></div>
-    <div class="preview-row"><span>Untung/Rugi</span>
-      <strong style="color:${profit>=0?'var(--green)':'var(--red)'}">${fmt(profit)}</strong>
-    </div>
-  `;
-}
-[deliveredInput, soldInput, costInput, locInput].forEach(el => el.addEventListener('input', updatePreview));
-
-/* ============ SUBMIT ============ */
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const delivered = parseInt(deliveredInput.value);
-  const sold = parseInt(soldInput.value);
-  if (sold > delivered) return alert('Jual tak boleh melebihi hantar!');
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Menyimpan...';
-  try {
-    await addDoc(collection(db, 'records'), {
-      date: dateInput.value,
-      location: locInput.value,
-      delivered, sold,
-      costPrice: parseFloat(costInput.value),
-      sellPrice: LOCATIONS[locInput.value].price,
-      createdAt: serverTimestamp()
-    });
-    deliveredInput.value = 10;
-    soldInput.value = 8;
-    updatePreview();
-  } catch (err) {
-    alert('Gagal simpan: ' + err.message);
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = '💾 Simpan Rekod';
-  }
-});
 
 /* ============ BULK SAVE ============ */
 window.bulkSave = async function() {
@@ -408,7 +320,7 @@ window.bulkSave = async function() {
         createdAt: serverTimestamp()
       });
     }
-    alert('✅ Semua rekod disimpan');
+    alert(`✅ Rekod ${fmtDate(date)} disimpan`);
   } catch (err) {
     alert('Gagal: ' + err.message);
   }
@@ -536,7 +448,7 @@ function renderTodayRecords() {
       <div class="info">
         <strong>${loc.name}</strong><br>
         <span style="color:var(--gray); font-size:0.8rem;">
-          Hantar ${r.delivered} · Jual ${r.sold} · Sedekah ${c.sedekah} ·
+          ${fmtDate(r.date)} · Hantar ${r.delivered} · Jual ${r.sold} · Sedekah ${c.sedekah} ·
           <span class="${c.profit>=0?'profit':'loss'}" style="font-weight:700;">${fmt(c.profit)}</span>
         </span>
       </div>
@@ -582,7 +494,7 @@ function renderChart() {
     const ds = d.toISOString().slice(0,10);
     const dayRecs = allRecords.filter(r => r.date === ds);
     profits.push(dayRecs.reduce((s,r) => s + calcRecord(r).profit, 0));
-    days.push(ds.slice(5));
+    days.push(fmtShort(ds)); // DD/MM
   }
   if (chartInstance) chartInstance.destroy();
   chartInstance = new Chart($('profitChart'), {
@@ -626,8 +538,8 @@ function renderTrend() {
   const totalPct = entries.reduce((s,x) => s + x[1].sold, 0) / entries.reduce((s,x) => s + x[1].delivered, 0) * 100;
 
   $('trendInfo').innerHTML = `
-    <div class="trend-row"><span>🏆 Hari Terbaik</span><strong class="profit">${best[0]} — ${fmt(best[1].profit)}</strong></div>
-    <div class="trend-row"><span>📉 Hari Terburuk</span><strong class="loss">${worst[0]} — ${fmt(worst[1].profit)}</strong></div>
+    <div class="trend-row"><span>🏆 Hari Terbaik</span><strong class="profit">${fmtDate(best[0])} — ${fmt(best[1].profit)}</strong></div>
+    <div class="trend-row"><span>📉 Hari Terburuk</span><strong class="loss">${fmtDate(worst[0])} — ${fmt(worst[1].profit)}</strong></div>
     <div class="trend-row"><span>📊 Purata Harian</span><strong>${fmt(avg)}</strong></div>
     <div class="trend-row"><span>💰 Jumlah Untung (${totalDays} hari)</span><strong class="profit">${fmt(totalProfit)}</strong></div>
     <div class="trend-row"><span>🎯 Purata % Terjual</span><strong>${pct(totalPct)}</strong></div>
@@ -662,7 +574,7 @@ window.generateCustomReport = function() {
   });
 
   let html = `<div style="margin-bottom:12px; color:var(--gray); font-size:0.88rem;">
-    ${recs.length} rekod · ${from} → ${to} · Sedekah: <strong>${sedekah} unit</strong>
+    ${recs.length} rekod · <strong>${fmtDate(from)} → ${fmtDate(to)}</strong> · Sedekah: <strong>${sedekah} unit</strong>
   </div>`;
   html += `<div style="overflow-x:auto;"><table><thead><tr>
     <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
@@ -695,7 +607,7 @@ function buildCSV(recs, filename) {
   const rows = recs.map(r => {
     const c = calcRecord(r);
     const pctSold = r.delivered ? (r.sold / r.delivered * 100).toFixed(1) : '0';
-    return [r.date, LOCATIONS[r.location].name, r.delivered, r.sold,
+    return [fmtDate(r.date), LOCATIONS[r.location].name, r.delivered, r.sold,
       c.sedekah, r.costPrice.toFixed(2), r.sellPrice.toFixed(2),
       c.revenue.toFixed(2), c.cost.toFixed(2), c.profit.toFixed(2), pctSold];
   });
@@ -711,13 +623,30 @@ window.exportCSV = function() {
   const monthStr = new Date().toISOString().slice(0,7);
   const recs = allRecords.filter(r => r.date.startsWith(monthStr));
   if (!recs.length) return alert('Tiada rekod bulan ini');
-  buildCSV(recs, `jualan-${monthStr}.csv`);
+  const [y,m] = monthStr.split('-');
+  buildCSV(recs, `jualan-${m}-${y}.csv`);
 };
 
 window.exportCSVAll = function() {
   if (!allRecords.length) return alert('Tiada rekod');
-  buildCSV(allRecords, `jualan-semua-${new Date().toISOString().slice(0,10)}.csv`);
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  buildCSV(allRecords, `jualan-semua-${dd}-${mm}-${now.getFullYear()}.csv`);
 };
+
+/* ============ DATE HINTS (display dd/mm/yyyy) ============ */
+$('bulkDate').addEventListener('input', e => {
+  $('bulkDateDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
+});
+$('filterFrom').addEventListener('input', e => {
+  $('filterFromDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
+});
+$('filterTo').addEventListener('input', e => {
+  $('filterToDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
+});
+// Set hint untuk bulk date awal
+$('bulkDateDisplay').textContent = '📅 ' + fmtDate(todayStr);
 
 /* ============ AUTH ============ */
 window.doLogin = async function() {
@@ -755,14 +684,12 @@ if (REQUIRE_AUTH) {
   startData();
 }
 
-/* ============ PWA SERVICE WORKER ============ */
+/* ============ PWA ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
-
-updatePreview();
 </script>
 </body>
 </html>
