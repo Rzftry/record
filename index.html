@@ -7,7 +7,6 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#14b8a6">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -26,8 +25,7 @@
       radial-gradient(circle at 90% 90%, rgba(20,184,166,0.18) 0%, transparent 35%),
       radial-gradient(circle at 10% 90%, rgba(167,139,250,0.15) 0%, transparent 35%),
       linear-gradient(135deg, #fefce8 0%, #ecfeff 50%, #fdf2f8 100%);
-    background-attachment: fixed;
-    color: var(--dark); min-height: 100vh;
+    background-attachment: fixed; color: var(--dark); min-height: 100vh;
   }
   .container { max-width: 1000px; margin: 0 auto; padding-bottom: 40px; }
   h1 {
@@ -43,8 +41,7 @@
   .card {
     background: #fff; border-radius: 18px; padding: 20px;
     box-shadow: 0 4px 20px rgba(20,184,166,0.1); margin-bottom: 16px;
-    border-top: 4px solid var(--teal);
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 4px solid var(--teal); transition: transform 0.2s, box-shadow 0.2s;
   }
   .card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(20,184,166,0.18); }
   .card:nth-of-type(2) { border-top-color: var(--pink); }
@@ -54,6 +51,8 @@
   .card:nth-of-type(6) { border-top-color: var(--blue); }
   .card:nth-of-type(7) { border-top-color: var(--green); }
   .card:nth-of-type(8) { border-top-color: var(--pink); }
+  .card:nth-of-type(9) { border-top-color: var(--purple); }
+  .card:nth-of-type(10) { border-top-color: var(--teal); }
   .grid { display: grid; gap: 12px; }
   .grid-2 { grid-template-columns: 1fr 1fr; }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
@@ -61,8 +60,7 @@
   label { display: block; font-size: 0.82rem; color: var(--teal-dark); margin-bottom: 4px; font-weight: 700; }
   input, select {
     width: 100%; padding: 10px 12px; border: 2px solid #e0f2fe;
-    border-radius: 10px; font-size: 1rem; background: #f0fdfa; color: var(--dark);
-    transition: all 0.2s;
+    border-radius: 10px; font-size: 1rem; background: #f0fdfa; color: var(--dark); transition: all 0.2s;
   }
   input:focus, select:focus {
     outline: none; border-color: var(--teal); background: #fff;
@@ -81,49 +79,44 @@
   button:active { transform: translateY(0); }
   button:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
   .btn-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 4px 12px rgba(251,191,36,0.3); }
-  .btn-amber:hover { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 6px 18px rgba(251,191,36,0.4); }
+  .btn-amber:hover { background: linear-gradient(135deg, #f59e0b, #d97706); }
   .btn-blue { background: linear-gradient(135deg, #38bdf8, #0ea5e9); box-shadow: 0 4px 12px rgba(56,189,248,0.3); }
-  .btn-blue:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 6px 18px rgba(56,189,248,0.4); }
+  .btn-blue:hover { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
   .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-  .btn-red:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); box-shadow: 0 6px 18px rgba(239,68,68,0.4); }
+  .btn-red:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+  .btn-purple { background: linear-gradient(135deg, #a78bfa, #8b5cf6); box-shadow: 0 4px 12px rgba(167,139,250,0.3); }
+  .btn-purple:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
   .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
   .add-loc-btn {
     background: linear-gradient(135deg, #10b981, #059669);
     color: white; border: none; border-radius: 50%;
     width: 32px; height: 32px; font-size: 1.2rem; font-weight: 700;
     cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(16,185,129,0.4);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.4); transition: transform 0.2s;
   }
-  .add-loc-btn:hover { transform: scale(1.1) rotate(90deg); background: linear-gradient(135deg, #059669, #047857); }
-  .del-loc-btn {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+  .add-loc-btn:hover { transform: scale(1.1) rotate(90deg); }
+  .loc-btn-group { display: flex; gap: 4px; }
+  .del-loc-btn, .edit-loc-btn {
     color: white; border: none; border-radius: 50%;
-    width: 22px; height: 22px; font-size: 0.85rem; font-weight: 700;
+    width: 24px; height: 24px; font-size: 0.75rem; font-weight: 700;
     cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px rgba(239,68,68,0.4); opacity: 0.7;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); opacity: 0.85;
     transition: opacity 0.15s, transform 0.15s;
-    flex-shrink: 0;
   }
-  .del-loc-btn:hover { opacity: 1; transform: scale(1.15); }
+  .del-loc-btn { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .edit-loc-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+  .del-loc-btn:hover, .edit-loc-btn:hover { opacity: 1; transform: scale(1.15); }
   .profit-big {
     font-size: 2rem; font-weight: 800; text-align: center;
     padding: 18px; border-radius: 14px; margin-top: 12px; transition: all 0.3s;
   }
-  .profit-big.profit {
-    color: #059669; background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-    box-shadow: 0 4px 16px rgba(16,185,129,0.25);
-  }
-  .profit-big.loss {
-    color: #dc2626; background: linear-gradient(135deg, #fee2e2, #fecaca);
-    box-shadow: 0 4px 16px rgba(239,68,68,0.25);
-  }
+  .profit-big.profit { color: #059669; background: linear-gradient(135deg, #d1fae5, #a7f3d0); box-shadow: 0 4px 16px rgba(16,185,129,0.25); }
+  .profit-big.loss { color: #dc2626; background: linear-gradient(135deg, #fee2e2, #fecaca); box-shadow: 0 4px 16px rgba(239,68,68,0.25); }
   .profit { color: #059669; font-weight: 700; }
   .loss { color: #dc2626; font-weight: 700; }
   .loc-card {
     background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-    border: 2px solid #99f6e4; border-radius: 12px; padding: 14px;
-    transition: transform 0.2s;
+    border: 2px solid #99f6e4; border-radius: 12px; padding: 14px; transition: transform 0.2s;
   }
   .loc-card:nth-child(2) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); border-color: #fbcfe8; }
   .loc-card:nth-child(3) { background: linear-gradient(135deg, #fefce8, #fef9c3); border-color: #fde68a; }
@@ -134,43 +127,31 @@
   .loc-card:nth-child(2) h3 { color: var(--pink-dark); }
   .loc-card:nth-child(3) h3 { color: #b45309; }
   .loc-card:nth-child(4) h3 { color: #7c3aed; }
-  .loc-card:nth-child(5) h3 { color: #c2410c; }
   .loc-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 3px 0; }
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th {
-    text-align: left; padding: 10px 8px;
-    background: linear-gradient(90deg, var(--teal-light), var(--pink-light));
-    color: var(--teal-dark); font-size: 0.78rem; white-space: nowrap;
-  }
+  th { text-align: left; padding: 10px 8px; background: linear-gradient(90deg, var(--teal-light), var(--pink-light)); color: var(--teal-dark); font-size: 0.78rem; white-space: nowrap; }
   th:first-child { border-radius: 8px 0 0 0; }
   th:last-child { border-radius: 0 8px 0 0; }
   td { padding: 9px 8px; border-bottom: 1px solid #f0fdfa; white-space: nowrap; }
   tr:hover td { background: #f0fdfa; }
   .record-item {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 12px; border-radius: 10px;
-    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
-    margin-bottom: 8px; border-left: 4px solid var(--teal); gap: 8px;
-    transition: transform 0.15s;
+    padding: 12px; border-radius: 10px; background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+    margin-bottom: 8px; border-left: 4px solid var(--teal); gap: 8px; transition: transform 0.15s;
   }
   .record-item:hover { transform: translateX(2px); }
   .record-item .info { font-size: 0.88rem; flex: 1; }
   .record-item .actions { display: flex; gap: 4px; }
-  .empty {
-    color: var(--gray); text-align: center; padding: 20px;
-    font-style: italic; background: #f8fafc; border-radius: 10px;
-  }
+  .empty { color: var(--gray); text-align: center; padding: 20px; font-style: italic; background: #f8fafc; border-radius: 10px; }
   .status { font-size: 0.75rem; color: var(--gray); text-align: right; padding: 4px 0; }
   .sedekah-box {
     padding: 12px 14px; background: linear-gradient(135deg, #fef9c3, #fde68a);
     border-radius: 10px; margin-top: 12px; display: flex; justify-content: space-between;
-    align-items: center; font-weight: 700; color: #92400e;
-    border: 2px solid #fcd34d;
+    align-items: center; font-weight: 700; color: #92400e; border: 2px solid #fcd34d;
   }
   .bulk-row {
     display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px;
-    margin-bottom: 10px; align-items: end; padding: 10px;
-    border-radius: 10px; background: #f8fafc;
+    margin-bottom: 10px; align-items: end; padding: 10px; border-radius: 10px; background: #f8fafc;
   }
   .bulk-row:nth-of-type(2) { background: linear-gradient(135deg, #f0fdfa, #ecfeff); }
   .bulk-row:nth-of-type(3) { background: linear-gradient(135deg, #fdf2f8, #fce7f3); }
@@ -180,42 +161,93 @@
     .bulk-row { grid-template-columns: 1fr 1fr; }
     .bulk-row .loc-info { grid-column: span 2; }
   }
-  .loc-info {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 8px; padding-bottom: 10px; flex-wrap: wrap;
-  }
+  .loc-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-bottom: 10px; flex-wrap: wrap; }
   .loc-name { font-weight: 700; font-size: 0.9rem; color: var(--teal-dark); }
-  .trend-row {
-    display: flex; justify-content: space-between; padding: 8px 0;
-    font-size: 0.88rem; border-bottom: 1px dashed #a7f3d0;
-  }
+  .trend-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.88rem; border-bottom: 1px dashed #a7f3d0; }
   .trend-row:last-child { border-bottom: none; }
   .login-screen {
     position: fixed; inset: 0;
     background: linear-gradient(135deg, #fefce8, #ecfeff, #fdf2f8);
     display: flex; align-items: center; justify-content: center;
-    padding: 20px; z-index: 999;
+    padding: 20px; z-index: 999; overflow-y: auto;
   }
   .login-box {
-    background: #fff; padding: 32px; border-radius: 20px;
+    background: #fff; padding: 28px; border-radius: 20px;
     box-shadow: 0 8px 32px rgba(20,184,166,0.2);
     width: 100%; max-width: 400px; border-top: 5px solid var(--teal);
+    margin: auto;
   }
   .login-box h2 { text-align: center; margin-bottom: 20px; border: none; padding: 0; font-size: 1.3rem; }
   .login-box input, .login-box select { margin-bottom: 12px; }
-  .login-box button { width: 100%; }
-  .logout-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.8rem; color: var(--gray); margin-bottom: 8px;
-  }
+  .login-box .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .login-box .modal-actions button { flex: 1; }
+  .logout-bar { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--gray); margin-bottom: 8px; }
   .hidden { display: none !important; }
   .date-hint { font-size: 0.75rem; color: var(--gray); margin-top: 4px; font-weight: 600; }
   .date-with-btn { display: flex; gap: 8px; align-items: stretch; }
   .date-with-btn input { flex: 1; }
   .date-with-btn .btn-sm { white-space: nowrap; padding: 0 12px; }
+  .month-bar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: linear-gradient(135deg, #f0fdfa, #fce7f3);
+    padding: 10px 14px; border-radius: 12px; margin-bottom: 16px;
+    border: 2px solid #99f6e4;
+  }
+  .month-bar label { margin: 0; flex-shrink: 0; }
+  .month-bar input[type="month"] { flex: 1; min-width: 140px; margin: 0; }
+  .toast-container {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 2000; display: flex; flex-direction: column; gap: 8px;
+    align-items: center; pointer-events: none; width: calc(100% - 40px); max-width: 400px;
+  }
+  .toast {
+    padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+    color: white; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: toastIn 0.3s ease-out; pointer-events: auto;
+    max-width: 100%; text-align: center;
+  }
+  .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .toast.info { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
+  .toast.warning { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .loading-indicator {
+    position: fixed; top: 20px; right: 20px; background: white;
+    padding: 8px 16px; border-radius: 20px; font-size: 0.85rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 500;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .loading-indicator::before {
+    content: ''; width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--teal); border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .dow-bar {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    border-bottom: 1px dashed #e0f2fe;
+  }
+  .dow-bar:last-child { border-bottom: none; }
+  .dow-name { min-width: 70px; font-weight: 700; font-size: 0.9rem; }
+  .dow-bar-track { flex: 1; height: 24px; background: #f1f5f9; border-radius: 12px; overflow: hidden; position: relative; }
+  .dow-bar-fill {
+    height: 100%; border-radius: 12px; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 8px; color: white; font-size: 0.75rem;
+    font-weight: 700; min-width: 40px; transition: width 0.5s ease-out;
+  }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- LOADING -->
+<div id="loadingIndicator" class="loading-indicator hidden">Memuatkan...</div>
 
 <!-- LOGIN -->
 <div id="loginScreen" class="login-screen hidden">
@@ -228,7 +260,7 @@
   </div>
 </div>
 
-<!-- MODAL TAMBAH LOKASI -->
+<!-- MODAL: TAMBAH LOKASI -->
 <div id="addLocModal" class="login-screen hidden">
   <div class="login-box" style="border-top-color:var(--green);">
     <h2>➕ Tambah Lokasi Baru</h2>
@@ -236,11 +268,53 @@
     <input type="text" id="newLocName" placeholder="cth: Pasar Malam">
     <label>Harga Jual (RM)</label>
     <input type="number" id="newLocPrice" step="0.01" min="0" value="5">
-    <div style="display:flex; gap:8px; margin-top:16px;">
+    <div class="modal-actions">
       <button onclick="closeAddLoc()" style="background:linear-gradient(135deg,#94a3b8,#64748b);">Batal</button>
-      <button onclick="saveNewLoc()" style="flex:2;">Simpan</button>
+      <button onclick="saveNewLoc()">Simpan</button>
     </div>
     <div id="addLocError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT LOKASI -->
+<div id="editLocModal" class="login-screen hidden">
+  <div class="login-box" style="border-top-color:var(--amber);">
+    <h2>✏️ Edit Lokasi</h2>
+    <label>Nama Lokasi</label>
+    <input type="text" id="editLocName">
+    <label>Harga Jual (RM)</label>
+    <input type="number" id="editLocPrice" step="0.01" min="0">
+    <div style="font-size:0.75rem; color:var(--gray); margin-top:8px;">
+      ℹ️ Harga baru hanya untuk rekod akan datang. Rekod lama tidak berubah.
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeEditLoc()" style="background:linear-gradient(135deg,#94a3b8,#64748b);">Batal</button>
+      <button onclick="saveEditLoc()">Simpan</button>
+    </div>
+    <div id="editLocError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT REKOD -->
+<div id="editRecModal" class="login-screen hidden">
+  <div class="login-box" style="border-top-color:var(--purple);">
+    <h2>✏️ Edit Rekod</h2>
+    <div id="editRecInfo" style="font-size:0.85rem; color:var(--gray); margin-bottom:12px; text-align:center;"></div>
+    <div class="grid grid-2">
+      <div>
+        <label>Hantar (unit)</label>
+        <input type="number" id="editRecD" min="0">
+      </div>
+      <div>
+        <label>Jual (unit)</label>
+        <input type="number" id="editRecS" min="0">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeEditRec()" style="background:linear-gradient(135deg,#94a3b8,#64748b);">Batal</button>
+      <button onclick="saveEditRec()">Simpan</button>
+    </div>
+    <div id="editRecError" style="color:var(--red); font-size:0.85rem; margin-top:10px; text-align:center;"></div>
   </div>
 </div>
 
@@ -250,6 +324,13 @@
   <div class="logout-bar">
     <span class="status" id="status">Menyambung...</span>
     <button id="logoutBtn" class="btn-sm btn-red hidden" onclick="doLogout()">Log Keluar</button>
+  </div>
+
+  <!-- MONTH PICKER -->
+  <div class="month-bar">
+    <label>📅 Lihat Bulan:</label>
+    <input type="month" id="monthPicker">
+    <button class="btn-sm btn-blue" onclick="setMonthCurrent()">Bulan Ini</button>
   </div>
 
   <!-- REKOD PANTAS -->
@@ -273,7 +354,10 @@
       </div>
     </div>
     <div id="bulkLocations"></div>
-    <button onclick="bulkSave()" style="margin-top:12px; width:100%;">💾 Simpan Semua Tempat</button>
+    <div class="btn-group" style="margin-top:12px;">
+      <button onclick="bulkSave()" style="flex:2;">💾 Simpan Semua Tempat</button>
+      <button onclick="copyYesterday()" class="btn-purple" style="flex:1;" title="Salin data semalam">📋 Salin Semalam</button>
+    </div>
   </div>
 
   <!-- RINGKASAN HARI INI -->
@@ -294,6 +378,12 @@
   <div class="card">
     <h2>📈 Trend Untung 7 Hari Terakhir</h2>
     <canvas id="profitChart" height="140"></canvas>
+  </div>
+
+  <!-- HARI PALING LARIS -->
+  <div class="card">
+    <h2>🌟 Hari Paling Laris (Bulan Ini)</h2>
+    <div id="dowStats"><div class="empty">Belum cukup data</div></div>
   </div>
 
   <!-- TREND -->
@@ -335,15 +425,16 @@
     <div id="customReport" style="margin-top:16px;"></div>
   </div>
 
-  <!-- REKOD HARI INI -->
+  <!-- REKOD BULAN INI -->
   <div class="card">
-    <h2>📝 Rekod Hari Ini</h2>
-    <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <select id="todayLocFilter" style="flex:1; max-width:220px;">
+    <h2>📝 Rekod <span id="recordMonthLabel">Bulan Ini</span></h2>
+    <div class="btn-group" style="margin-bottom:12px;">
+      <select id="todayLocFilter" style="flex:1; min-width:150px;">
         <option value="">📍 Semua Lokasi</option>
       </select>
-      <button class="btn-blue btn-sm" onclick="exportCSV()">📥 Export Bulan Ini</button>
-      <button class="btn-amber btn-sm" onclick="exportCSVAll()">📥 Export Semua</button>
+      <button class="btn-blue btn-sm" onclick="exportCSVMonth()">📥 CSV Bulan</button>
+      <button class="btn-amber btn-sm" onclick="exportCSVAll()">📥 CSV Semua</button>
+      <button class="btn-purple btn-sm" onclick="backupAll()">💾 Backup JSON</button>
     </div>
     <div id="todayRecords"></div>
   </div>
@@ -352,8 +443,9 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, collection, addDoc, onSnapshot, query,
-  deleteDoc, doc, serverTimestamp, updateDoc, setDoc
+  getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  collection, addDoc, onSnapshot, query, where,
+  deleteDoc, doc, serverTimestamp, updateDoc, setDoc, getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -371,7 +463,6 @@ const firebaseConfig = {
 };
 const REQUIRE_AUTH = false;
 
-/* ============ DEFAULTS ============ */
 const DEFAULT_LOCATIONS = [
   { id: 'rnr',    name: 'R&R',             price: 5,   order: 1 },
   { id: 'masjid', name: "Masjid D'warung", price: 4.5, order: 2 },
@@ -379,8 +470,16 @@ const DEFAULT_LOCATIONS = [
 ];
 const ORIGINAL_IDS = ['rnr', 'masjid', 'uniten'];
 
+/* ============ INIT FIREBASE (with offline persistence) ============ */
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let db;
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+} catch (e) {
+  db = getFirestore(app);
+}
 const auth = REQUIRE_AUTH ? getAuth(app) : null;
 
 /* ============ HELPERS ============ */
@@ -389,32 +488,68 @@ const fmt = n => 'RM ' + n.toFixed(2);
 const pct = n => n.toFixed(1) + '%';
 const fmtDate = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; };
 const fmtShort = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}/${m}`; };
-const todayISO = () => new Date().toISOString().slice(0,10);
+
+const todayISO = () => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+const currentMonthISO = () => todayISO().slice(0, 7);
+
+const yesterdayISO = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+const monthLabel = (ym) => {
+  const [y, m] = ym.split('-');
+  const names = ['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogos','Sep','Okt','Nov','Dis'];
+  return `${names[+m - 1]} ${y}`;
+};
+
+/* ============ TOAST ============ */
+function showToast(msg, type = 'success', duration = 3500) {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  $('toastContainer').appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(20px) scale(0.9)';
+    t.style.transition = 'all 0.3s';
+    setTimeout(() => t.remove(), 300);
+  }, duration);
+}
 
 /* ============ STATE ============ */
 const statusEl = $('status');
 const loginScreen = $('loginScreen');
 const appEl = $('app');
 const logoutBtn = $('logoutBtn');
-const addLocModal = $('addLocModal');
 
-// Pre-populate defaults for instant render
 let allLocations = DEFAULT_LOCATIONS.map(l => ({ ...l }));
-let allRecords = [];
+let allRecords = [];       // only records for currentMonth
+let currentMonth = currentMonthISO();
 let chartInstance = null;
 let recordUnsub = null;
 let locUnsub = null;
 let seeded = false;
 
-// Selected filters
 let todayLocFilter = '';
-let reportLocFilter = '';
+let editingLocId = null;
+let editingRecId = null;
 
 /* ============ LOCATION HELPERS ============ */
 function getLoc(id) {
   return allLocations.find(l => l.id === id) || { id, name: `[${id}]`, price: 0 };
 }
-
 function getRelevantLocations() {
   const ids = new Set(allLocations.map(l => l.id));
   allRecords.forEach(r => ids.add(r.location));
@@ -428,7 +563,12 @@ function calcRecord(r) {
   return { revenue, cost, profit: revenue - cost, sedekah: r.delivered - r.sold };
 }
 
-/* ============ DATE DEFAULT TODAY ============ */
+/* ============ LOADING INDICATOR ============ */
+function setLoading(on) {
+  $('loadingIndicator').classList.toggle('hidden', !on);
+}
+
+/* ============ DATE DEFAULT ============ */
 $('bulkDate').value = todayISO();
 $('bulkDateDisplay').textContent = '📅 ' + fmtDate(todayISO());
 
@@ -438,9 +578,47 @@ window.setBulkDateToday = function() {
   $('bulkDateDisplay').textContent = '📅 ' + fmtDate(t);
 };
 
-/* ============ BULK FORM (DYNAMIC) ============ */
+/* ============ MONTH PICKER ============ */
+$('monthPicker').value = currentMonth;
+$('monthPicker').addEventListener('change', e => {
+  currentMonth = e.target.value;
+  loadRecordsForMonth();
+});
+
+window.setMonthCurrent = function() {
+  currentMonth = currentMonthISO();
+  $('monthPicker').value = currentMonth;
+  loadRecordsForMonth();
+  showToast('📅 Bulan semasa dimuatkan', 'info');
+};
+
+/* ============ RECORDS LISTENER (by month) ============ */
+async function loadRecordsForMonth() {
+  if (recordUnsub) { recordUnsub(); recordUnsub = null; }
+  setLoading(true);
+  const start = `${currentMonth}-01`;
+  const end = `${currentMonth}-31`;
+  const q = query(
+    collection(db, 'records'),
+    where('date', '>=', start),
+    where('date', '<=', end)
+  );
+  recordUnsub = onSnapshot(q, snap => {
+    allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    statusEl.textContent = `✅ ${allRecords.length} rekod · ${monthLabel(currentMonth)}`;
+    statusEl.style.color = '#10b981';
+    setLoading(false);
+    render();
+  }, err => {
+    statusEl.textContent = '❌ ' + err.message;
+    statusEl.style.color = '#ef4444';
+    setLoading(false);
+    showToast('Ralat baca data: ' + err.message, 'error');
+  });
+}
+
+/* ============ BULK FORM ============ */
 function renderBulkForm() {
-  // Save current input values
   const saved = {};
   document.querySelectorAll('.bulk-row').forEach(row => {
     const d = row.querySelector('.bulk-d');
@@ -461,7 +639,10 @@ function renderBulkForm() {
     return `<div class="bulk-row" data-loc="${loc.id}">
       <div class="loc-info">
         <span class="loc-name">${loc.name} — ${fmt(loc.price)}</span>
-        <button class="del-loc-btn" data-loc-del="${loc.id}" title="Padam lokasi">×</button>
+        <div class="loc-btn-group">
+          <button class="edit-loc-btn" data-loc-edit="${loc.id}" title="Edit lokasi">✏️</button>
+          <button class="del-loc-btn" data-loc-del="${loc.id}" title="Padam lokasi">×</button>
+        </div>
       </div>
       <div><label style="font-size:0.72rem;">Hantar</label><input type="number" class="bulk-d" value="${defD}" min="0"></div>
       <div><label style="font-size:0.72rem;">Jual</label><input type="number" class="bulk-s" value="${defS}" min="0"></div>
@@ -471,13 +652,27 @@ function renderBulkForm() {
   container.querySelectorAll('[data-loc-del]').forEach(b => {
     b.onclick = () => deleteLocation(b.dataset.locDel);
   });
+  container.querySelectorAll('[data-loc-edit]').forEach(b => {
+    b.onclick = () => openEditLoc(b.dataset.locEdit);
+  });
 }
 
-/* ============ BULK SAVE ============ */
+/* ============ DUPLICATE CHECK ============ */
+async function checkExistingForDate(date) {
+  const q = query(collection(db, 'records'), where('date', '==', date));
+  const snap = await getDocs(q);
+  const existing = {};
+  snap.docs.forEach(d => {
+    existing[d.data().location] = { id: d.id, ...d.data() };
+  });
+  return existing;
+}
+
+/* ============ BULK SAVE (with duplicate detection) ============ */
 window.bulkSave = async function() {
   const date = $('bulkDate').value;
   const cost = parseFloat($('bulkCost').value) || 0;
-  if (!date) return alert('Pilih tarikh');
+  if (!date) return showToast('Pilih tarikh', 'error');
 
   const rows = document.querySelectorAll('.bulk-row');
   const data = [];
@@ -485,22 +680,97 @@ window.bulkSave = async function() {
     const locId = row.dataset.loc;
     const d = +row.querySelector('.bulk-d').value || 0;
     const s = +row.querySelector('.bulk-s').value || 0;
-    if (s > d) return alert(`Jual ${getLoc(locId).name} tak boleh lebih hantar!`);
+    if (s > d) return showToast(`Jual ${getLoc(locId).name} tak boleh lebih hantar!`, 'error');
     if (d === 0) continue;
     data.push({ loc: locId, d, s });
   }
-  if (!data.length) return alert('Tiada data untuk disimpan (semua hantar = 0)');
+  if (!data.length) return showToast('Tiada data untuk disimpan', 'warning');
 
+  setLoading(true);
   try {
-    for (const row of data) {
-      await addDoc(collection(db, 'records'), {
-        date, location: row.loc, delivered: row.d, sold: row.s,
-        costPrice: cost, sellPrice: getLoc(row.loc).price,
-        createdAt: serverTimestamp()
-      });
+    // Check duplicates in one query
+    const existing = await checkExistingForDate(date);
+    const conflicts = data.filter(r => existing[r.loc]);
+
+    let replaceMode = false;
+    if (conflicts.length) {
+      const names = conflicts.map(c => getLoc(c.loc).name).join(', ');
+      const msg = `Rekod ${fmtDate(date)} untuk ${names} dah ada.\n\nOK = Ganti rekod lama\nBatal = Tambah sebagai rekod baru`;
+      if (confirm(msg)) replaceMode = true;
     }
-    alert(`✅ ${data.length} rekod ${fmtDate(date)} disimpan`);
-  } catch (err) { alert('Gagal: ' + err.message); }
+
+    let added = 0, replaced = 0, skipped = 0;
+    for (const row of data) {
+      const ex = existing[row.loc];
+      if (ex && replaceMode) {
+        await updateDoc(doc(db, 'records', ex.id), {
+          delivered: row.d, sold: row.s,
+          costPrice: cost, sellPrice: getLoc(row.loc).price
+        });
+        replaced++;
+      } else if (ex && !replaceMode) {
+        // Tambah sebagai baru (boleh jadi duplicate intentionally)
+        await addDoc(collection(db, 'records'), {
+          date, location: row.loc, delivered: row.d, sold: row.s,
+          costPrice: cost, sellPrice: getLoc(row.loc).price,
+          createdAt: serverTimestamp()
+        });
+        added++;
+      } else {
+        await addDoc(collection(db, 'records'), {
+          date, location: row.loc, delivered: row.d, sold: row.s,
+          costPrice: cost, sellPrice: getLoc(row.loc).price,
+          createdAt: serverTimestamp()
+        });
+        added++;
+      }
+    }
+
+    let msg = '✅ ';
+    if (replaced) msg += `${replaced} diganti · `;
+    if (added) msg += `${added} ditambah`;
+    showToast(msg + ` untuk ${fmtDate(date)}`, 'success');
+  } catch (err) {
+    showToast('Gagal: ' + err.message, 'error');
+  } finally {
+    setLoading(false);
+  }
+};
+
+/* ============ SALIN SEMALAM ============ */
+window.copyYesterday = async function() {
+  const yStr = yesterdayISO();
+  setLoading(true);
+  try {
+    const q = query(collection(db, 'records'), where('date', '==', yStr));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      showToast(`Tiada rekod semalam (${fmtDate(yStr)})`, 'warning');
+      return;
+    }
+    const byLoc = {};
+    snap.docs.forEach(d => {
+      const data = d.data();
+      if (!byLoc[data.location]) byLoc[data.location] = { d: 0, s: 0 };
+      byLoc[data.location].d += data.delivered;
+      byLoc[data.location].s += data.sold;
+    });
+
+    let filled = 0;
+    document.querySelectorAll('.bulk-row').forEach(row => {
+      const locId = row.dataset.loc;
+      if (byLoc[locId]) {
+        row.querySelector('.bulk-d').value = byLoc[locId].d;
+        row.querySelector('.bulk-s').value = byLoc[locId].s;
+        filled++;
+      }
+    });
+    showToast(`📋 ${filled} lokasi diisi dari ${fmtDate(yStr)}`, 'success');
+  } catch (err) {
+    showToast('Gagal: ' + err.message, 'error');
+  } finally {
+    setLoading(false);
+  }
 };
 
 /* ============ ADD LOCATION ============ */
@@ -508,35 +778,67 @@ window.openAddLoc = function() {
   $('newLocName').value = '';
   $('newLocPrice').value = '5';
   $('addLocError').textContent = '';
-  addLocModal.classList.remove('hidden');
+  $('addLocModal').classList.remove('hidden');
   setTimeout(() => $('newLocName').focus(), 100);
 };
-
-window.closeAddLoc = function() {
-  addLocModal.classList.add('hidden');
-};
+window.closeAddLoc = function() { $('addLocModal').classList.add('hidden'); };
 
 window.saveNewLoc = async function() {
   const name = $('newLocName').value.trim();
   const price = parseFloat($('newLocPrice').value);
-  const errEl = $('addLocError');
-  errEl.textContent = '';
+  const errEl = $('addLocError'); errEl.textContent = '';
 
   if (!name) { errEl.textContent = 'Sila masukkan nama lokasi'; return; }
   if (isNaN(price) || price < 0) { errEl.textContent = 'Harga tak sah'; return; }
   if (allLocations.some(l => l.name.toLowerCase() === name.toLowerCase())) {
-    errEl.textContent = 'Nama lokasi sudah wujud';
-    return;
+    errEl.textContent = 'Nama lokasi sudah wujud'; return;
   }
 
   const id = 'loc_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
   const maxOrder = Math.max(0, ...allLocations.map(l => l.order || 0));
-
   try {
     await setDoc(doc(db, 'locations', id), {
       name, price, order: maxOrder + 1, createdAt: serverTimestamp()
     });
     closeAddLoc();
+    showToast(`✅ Lokasi "${name}" ditambah`, 'success');
+  } catch (e) {
+    errEl.textContent = 'Gagal: ' + e.message;
+  }
+};
+
+/* ============ EDIT LOCATION ============ */
+window.openEditLoc = function(locId) {
+  const loc = allLocations.find(l => l.id === locId);
+  if (!loc) return;
+  editingLocId = locId;
+  $('editLocName').value = loc.name;
+  $('editLocPrice').value = loc.price;
+  $('editLocError').textContent = '';
+  $('editLocModal').classList.remove('hidden');
+  setTimeout(() => $('editLocName').focus(), 100);
+};
+window.closeEditLoc = function() {
+  $('editLocModal').classList.add('hidden');
+  editingLocId = null;
+};
+
+window.saveEditLoc = async function() {
+  if (!editingLocId) return;
+  const name = $('editLocName').value.trim();
+  const price = parseFloat($('editLocPrice').value);
+  const errEl = $('editLocError'); errEl.textContent = '';
+
+  if (!name) { errEl.textContent = 'Nama tidak boleh kosong'; return; }
+  if (isNaN(price) || price < 0) { errEl.textContent = 'Harga tak sah'; return; }
+  if (allLocations.some(l => l.id !== editingLocId && l.name.toLowerCase() === name.toLowerCase())) {
+    errEl.textContent = 'Nama sudah digunakan lokasi lain'; return;
+  }
+
+  try {
+    await updateDoc(doc(db, 'locations', editingLocId), { name, price });
+    closeEditLoc();
+    showToast('✅ Lokasi dikemas kini', 'success');
   } catch (e) {
     errEl.textContent = 'Gagal: ' + e.message;
   }
@@ -547,18 +849,21 @@ async function deleteLocation(locId) {
   const loc = getLoc(locId);
   const used = allRecords.some(r => r.location === locId);
   if (used) {
-    return alert(`Lokasi "${loc.name}" ada rekod sedia ada.\n\nPadam semua rekod lokasi ini dulu sebelum padam lokasi.`);
+    return showToast(`Lokasi "${loc.name}" ada rekod bulan ini. Padam rekod dulu.`, 'error');
   }
   if (!confirm(`Padam lokasi "${loc.name}"?`)) return;
-  try { await deleteDoc(doc(db, 'locations', locId)); }
-  catch (e) { alert(e.message); }
+  try {
+    await deleteDoc(doc(db, 'locations', locId));
+    showToast('🗑️ Lokasi dipadam', 'success');
+  } catch (e) {
+    showToast('Gagal: ' + e.message, 'error');
+  }
 }
 
 /* ============ LOCATIONS LISTENER ============ */
 function startLocations() {
   if (locUnsub) locUnsub();
   locUnsub = onSnapshot(collection(db, 'locations'), async snap => {
-    // Seed defaults on first empty
     if (snap.empty && !seeded) {
       seeded = true;
       for (const loc of DEFAULT_LOCATIONS) {
@@ -576,63 +881,41 @@ function startLocations() {
     render();
   }, err => {
     console.error('Locations error:', err);
-    statusEl.textContent = '❌ ' + err.message;
-    statusEl.style.color = 'var(--red)';
+    showToast('Ralat lokasi: ' + err.message, 'error');
   });
 }
 
 /* ============ LOCATION DROPDOWNS ============ */
 function updateLocDropdowns() {
-  const opts = allLocations.map(l =>
-    `<option value="${l.id}">${l.name}</option>`
-  ).join('');
-
-  const sel1 = $('filterLoc');
-  const sel2 = $('todayLocFilter');
+  const opts = allLocations.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+  const sel1 = $('filterLoc'), sel2 = $('todayLocFilter');
   const v1 = sel1.value, v2 = sel2.value;
-
   sel1.innerHTML = '<option value="">Semua Lokasi</option>' + opts;
   sel2.innerHTML = '<option value="">📍 Semua Lokasi</option>' + opts;
-
-  sel1.value = v1;
-  sel2.value = v2;
-  reportLocFilter = v1;
-  todayLocFilter = v2;
+  sel1.value = v1; sel2.value = v2;
 }
-
-$('filterLoc').addEventListener('change', e => { reportLocFilter = e.target.value; });
-$('todayLocFilter').addEventListener('change', e => { todayLocFilter = e.target.value; renderTodayRecords(); });
-
-/* ============ RECORDS LISTENER ============ */
-function startData() {
-  if (recordUnsub) recordUnsub();
-  const q = query(collection(db, 'records'));
-  recordUnsub = onSnapshot(q, snap => {
-    statusEl.textContent = '✅ Bersambung';
-    statusEl.style.color = '#10b981';
-    allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    render();
-  }, err => {
-    statusEl.textContent = '❌ ' + err.message;
-    statusEl.style.color = '#ef4444';
-    console.error(err);
-  });
-}
+$('todayLocFilter').addEventListener('change', e => {
+  todayLocFilter = e.target.value;
+  renderTodayRecords();
+});
 
 /* ============ RENDER ALL ============ */
 function render() {
   allRecords.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  $('recordMonthLabel').textContent = monthLabel(currentMonth);
   renderToday();
   renderMonthly();
   renderTodayRecords();
   renderChart();
   renderTrend();
+  renderDayOfWeek();
 }
 
 /* ============ TODAY ============ */
 function renderToday() {
   const today = todayISO();
-  const recs = allRecords.filter(r => r.date === today);
+  const isCurrentMonth = currentMonth === currentMonthISO();
+  const recs = isCurrentMonth ? allRecords.filter(r => r.date === today) : [];
   const locs = getRelevantLocations();
   const byLoc = {};
   locs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, name: l.name });
@@ -648,16 +931,20 @@ function renderToday() {
     totalSedekah += c.sedekah;
   });
 
-  $('todayStats').innerHTML = Object.entries(byLoc).map(([id, s]) => {
-    const pctSold = s.d ? (s.s / s.d * 100) : 0;
-    return `<div class="loc-card">
-      <h3>${s.name}</h3>
-      <div class="loc-row"><span>Hantar</span><strong>${s.d}</strong></div>
-      <div class="loc-row"><span>Jual</span><strong>${s.s}</strong></div>
-      <div class="loc-row"><span>% Jual</span><strong>${pct(pctSold)}</strong></div>
-      <div class="loc-row"><span>Untung</span><strong class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</strong></div>
-    </div>`;
-  }).join('');
+  if (!isCurrentMonth) {
+    $('todayStats').innerHTML = `<div class="empty" style="grid-column: span 3;">Ringkasan hari ini hanya untuk bulan semasa</div>`;
+  } else {
+    $('todayStats').innerHTML = Object.entries(byLoc).map(([id, s]) => {
+      const pctSold = s.d ? (s.s / s.d * 100) : 0;
+      return `<div class="loc-card">
+        <h3>${s.name}</h3>
+        <div class="loc-row"><span>Hantar</span><strong>${s.d}</strong></div>
+        <div class="loc-row"><span>Jual</span><strong>${s.s}</strong></div>
+        <div class="loc-row"><span>% Jual</span><strong>${pct(pctSold)}</strong></div>
+        <div class="loc-row"><span>Untung</span><strong class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</strong></div>
+      </div>`;
+    }).join('');
+  }
 
   $('todaySedekah').textContent = totalSedekah + ' unit';
   $('todayProfit').textContent = fmt(totalProfit);
@@ -666,8 +953,7 @@ function renderToday() {
 
 /* ============ MONTHLY ============ */
 function renderMonthly() {
-  const monthStr = new Date().toISOString().slice(0,7);
-  const recs = allRecords.filter(r => r.date.startsWith(monthStr));
+  const recs = allRecords;
   const locs = getRelevantLocations();
   const byLoc = {};
   locs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, rev:0, cost:0, name: l.name });
@@ -708,14 +994,13 @@ function renderMonthly() {
   $('monthlySedekah').textContent = totalSedekah + ' unit';
 }
 
-/* ============ TODAY RECORDS (with location filter) ============ */
+/* ============ RECORDS LIST (with filters) ============ */
 function renderTodayRecords() {
-  const today = todayISO();
-  let recs = allRecords.filter(r => r.date === today);
+  let recs = allRecords;
   if (todayLocFilter) recs = recs.filter(r => r.location === todayLocFilter);
 
   if (!recs.length) {
-    $('todayRecords').innerHTML = '<div class="empty">Tiada rekod untuk dipaparkan 🍃</div>';
+    $('todayRecords').innerHTML = `<div class="empty">Tiada rekod untuk ${monthLabel(currentMonth)} 🍃</div>`;
     return;
   }
 
@@ -740,33 +1025,64 @@ function renderTodayRecords() {
   $('todayRecords').querySelectorAll('[data-del]').forEach(b => {
     b.onclick = async () => {
       if (!confirm('Padam rekod ini?')) return;
-      try { await deleteDoc(doc(db, 'records', b.dataset.del)); }
-      catch (e) { alert(e.message); }
+      try {
+        await deleteDoc(doc(db, 'records', b.dataset.del));
+        showToast('🗑️ Rekod dipadam', 'success');
+      } catch (e) { showToast('Gagal: ' + e.message, 'error'); }
     };
   });
 
   $('todayRecords').querySelectorAll('[data-edit]').forEach(b => {
-    b.onclick = async () => {
-      const rec = allRecords.find(r => r.id === b.dataset.edit);
-      if (!rec) return;
-      const d = prompt('Hantar:', rec.delivered);
-      if (d === null) return;
-      const s = prompt('Jual:', rec.sold);
-      if (s === null) return;
-      if (+s > +d) return alert('Jual tak boleh lebih hantar!');
-      try { await updateDoc(doc(db, 'records', rec.id), { delivered: +d, sold: +s }); }
-      catch (e) { alert(e.message); }
-    };
+    b.onclick = () => openEditRec(b.dataset.edit);
   });
 }
 
-/* ============ CHART ============ */
+/* ============ EDIT RECORD MODAL ============ */
+window.openEditRec = function(recId) {
+  const rec = allRecords.find(r => r.id === recId);
+  if (!rec) return;
+  editingRecId = recId;
+  const loc = getLoc(rec.location);
+  $('editRecInfo').innerHTML = `<strong>${loc.name}</strong> · ${fmtDate(rec.date)}`;
+  $('editRecD').value = rec.delivered;
+  $('editRecS').value = rec.sold;
+  $('editRecError').textContent = '';
+  $('editRecModal').classList.remove('hidden');
+};
+window.closeEditRec = function() {
+  $('editRecModal').classList.add('hidden');
+  editingRecId = null;
+};
+window.saveEditRec = async function() {
+  if (!editingRecId) return;
+  const d = +$('editRecD').value;
+  const s = +$('editRecS').value;
+  const errEl = $('editRecError'); errEl.textContent = '';
+  if (isNaN(d) || d < 0) { errEl.textContent = 'Hantar tak sah'; return; }
+  if (isNaN(s) || s < 0) { errEl.textContent = 'Jual tak sah'; return; }
+  if (s > d) { errEl.textContent = 'Jual tak boleh lebih hantar'; return; }
+
+  try {
+    await updateDoc(doc(db, 'records', editingRecId), { delivered: d, sold: s });
+    closeEditRec();
+    showToast('✅ Rekod dikemas kini', 'success');
+  } catch (e) {
+    errEl.textContent = 'Gagal: ' + e.message;
+  }
+};
+
+/* ============ CHART (7 days of month) ============ */
 function renderChart() {
+  const [year, month] = currentMonth.split('-').map(Number);
+  const today = new Date();
+  const isCurrent = (year === today.getFullYear() && month === today.getMonth() + 1);
+  const endDate = isCurrent ? today : new Date(year, month, 0);
+
   const days = [], profits = [];
   for (let i = 6; i >= 0; i--) {
-    const d = new Date();
+    const d = new Date(endDate);
     d.setDate(d.getDate() - i);
-    const ds = d.toISOString().slice(0,10);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     const dayRecs = allRecords.filter(r => r.date === ds);
     profits.push(dayRecs.reduce((s,r) => s + calcRecord(r).profit, 0));
     days.push(fmtShort(ds));
@@ -777,11 +1093,9 @@ function renderChart() {
     data: {
       labels: days,
       datasets: [{
-        label: 'Untung (RM)',
-        data: profits,
+        label: 'Untung (RM)', data: profits,
         backgroundColor: profits.map(p => p >= 0 ? '#10b981' : '#ef4444'),
-        borderRadius: 8,
-        borderSkipped: false
+        borderRadius: 8, borderSkipped: false
       }]
     },
     options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
@@ -819,66 +1133,134 @@ function renderTrend() {
   `;
 }
 
-/* ============ CUSTOM REPORT (with location filter) ============ */
-window.generateCustomReport = function() {
-  const from = $('filterFrom').value;
-  const to = $('filterTo').value;
-  const locFilter = $('filterLoc').value;
-  if (!from || !to) return alert('Sila pilih tarikh dari & hingga');
-  if (from > to) return alert('Tarikh "dari" mesti sebelum "hingga"');
+/* ============ DAY OF WEEK ANALYSIS ============ */
+function renderDayOfWeek() {
+  const dayNames = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+  const stats = dayNames.map(() => ({ p: 0, d: 0, s: 0, days: 0 }));
 
-  let recs = allRecords.filter(r => r.date >= from && r.date <= to);
-  if (locFilter) recs = recs.filter(r => r.location === locFilter);
+  const byDate = {};
+  allRecords.forEach(r => {
+    if (!byDate[r.date]) byDate[r.date] = { p: 0, d: 0, s: 0 };
+    const c = calcRecord(r);
+    byDate[r.date].p += c.profit;
+    byDate[r.date].d += r.delivered;
+    byDate[r.date].s += r.sold;
+  });
 
-  if (!recs.length) {
-    $('customReport').innerHTML = '<div class="empty">Tiada rekod dalam julat ini</div>';
+  Object.entries(byDate).forEach(([date, s]) => {
+    const dow = new Date(date + 'T00:00:00').getDay();
+    stats[dow].p += s.p;
+    stats[dow].d += s.d;
+    stats[dow].s += s.s;
+    stats[dow].days += 1;
+  });
+
+  const ranked = dayNames.map((name, i) => ({
+    name, ...stats[i],
+    avgProfit: stats[i].days ? stats[i].p / stats[i].days : 0
+  })).filter(x => x.days > 0).sort((a, b) => b.avgProfit - a.avgProfit);
+
+  if (!ranked.length) {
+    $('dowStats').innerHTML = '<div class="empty">Belum ada data bulan ini</div>';
     return;
   }
 
-  // Determine locations to show
-  let showLocs = locFilter ? [getLoc(locFilter)] : getRelevantLocations().filter(l => recs.some(r => r.location === l.id));
+  const maxAbs = Math.max(...ranked.map(x => Math.abs(x.avgProfit))) || 1;
+  $('dowStats').innerHTML = ranked.map((x, i) => {
+    const width = Math.max(10, Math.abs(x.avgProfit) / maxAbs * 100);
+    const color = x.avgProfit >= 0 ? 'linear-gradient(90deg, #10b981, #059669)' : 'linear-gradient(90deg, #ef4444, #dc2626)';
+    const medal = i === 0 ? '🥇 ' : i === 1 ? '🥈 ' : i === 2 ? '🥉 ' : '';
+    return `<div class="dow-bar">
+      <span class="dow-name">${medal}${x.name}</span>
+      <div class="dow-bar-track">
+        <div class="dow-bar-fill" style="width:${width}%; background:${color};">
+          ${fmt(x.avgProfit)}
+        </div>
+      </div>
+      <span style="font-size:0.75rem; color:var(--gray); min-width:70px; text-align:right;">${x.days} hari</span>
+    </div>`;
+  }).join('');
+}
 
-  const byLoc = {};
-  showLocs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, rev:0, cost:0, name: l.name });
-  let T = { d:0, s:0, p:0, rev:0, cost:0 }, sedekah = 0;
+/* ============ CUSTOM REPORT (fetch on demand) ============ */
+window.generateCustomReport = async function() {
+  const from = $('filterFrom').value;
+  const to = $('filterTo').value;
+  const locFilter = $('filterLoc').value;
+  if (!from || !to) return showToast('Sila pilih tarikh dari & hingga', 'error');
+  if (from > to) return showToast('Tarikh "dari" mesti sebelum "hingga"', 'error');
 
-  recs.forEach(r => {
-    const c = calcRecord(r);
-    if (!byLoc[r.location]) byLoc[r.location] = { d:0, s:0, p:0, rev:0, cost:0, name: getLoc(r.location).name };
-    byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
-    byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
-    byLoc[r.location].cost += c.cost;
-    T.d += r.delivered; T.s += r.sold; T.p += c.profit;
-    T.rev += c.revenue; T.cost += c.cost;
-    sedekah += c.sedekah;
-  });
+  setLoading(true);
+  try {
+    // Check if range is within current loaded month
+    const monthStart = `${currentMonth}-01`;
+    const monthEnd = `${currentMonth}-31`;
+    let recs;
+    if (from >= monthStart && to <= monthEnd) {
+      recs = allRecords.filter(r => r.date >= from && r.date <= to);
+    } else {
+      const q = query(collection(db, 'records'),
+        where('date', '>=', from), where('date', '<=', to));
+      const snap = await getDocs(q);
+      recs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    if (locFilter) recs = recs.filter(r => r.location === locFilter);
 
-  const locLabel = locFilter ? getLoc(locFilter).name : 'Semua Lokasi';
-  let html = `<div style="margin-bottom:12px; color:var(--gray); font-size:0.88rem;">
-    ${recs.length} rekod · <strong>${fmtDate(from)} → ${fmtDate(to)}</strong> · 📍 ${locLabel} · Sedekah: <strong>${sedekah} unit</strong>
-  </div>`;
-  html += `<div style="overflow-x:auto;"><table><thead><tr>
-    <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
-    <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
-  </tr></thead><tbody>`;
+    if (!recs.length) {
+      $('customReport').innerHTML = '<div class="empty">Tiada rekod dalam julat ini</div>';
+      return;
+    }
 
-  Object.entries(byLoc).forEach(([id, s]) => {
-    const pctSold = s.d ? (s.s/s.d*100) : 0;
-    html += `<tr>
-      <td>${s.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
-      <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
-      <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
-    </tr>`;
-  });
+    let showLocs;
+    if (locFilter) showLocs = [getLoc(locFilter)];
+    else showLocs = getRelevantLocations().filter(l => recs.some(r => r.location === l.id));
 
-  const totalPct = T.d ? (T.s/T.d*100) : 0;
-  html += `<tr style="background:linear-gradient(90deg,#ccfbf1,#fce7f3); font-weight:700;">
-    <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d-T.s}</td>
-    <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
-    <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
-  </tr></tbody></table></div>`;
+    const byLoc = {};
+    showLocs.forEach(l => byLoc[l.id] = { d:0, s:0, p:0, rev:0, cost:0, name: l.name });
+    let T = { d:0, s:0, p:0, rev:0, cost:0 }, sedekah = 0;
 
-  $('customReport').innerHTML = html;
+    recs.forEach(r => {
+      const c = calcRecord(r);
+      if (!byLoc[r.location]) byLoc[r.location] = { d:0, s:0, p:0, rev:0, cost:0, name: getLoc(r.location).name };
+      byLoc[r.location].d += r.delivered; byLoc[r.location].s += r.sold;
+      byLoc[r.location].p += c.profit; byLoc[r.location].rev += c.revenue;
+      byLoc[r.location].cost += c.cost;
+      T.d += r.delivered; T.s += r.sold; T.p += c.profit;
+      T.rev += c.revenue; T.cost += c.cost;
+      sedekah += c.sedekah;
+    });
+
+    const locLabel = locFilter ? getLoc(locFilter).name : 'Semua Lokasi';
+    let html = `<div style="margin-bottom:12px; color:var(--gray); font-size:0.88rem;">
+      ${recs.length} rekod · <strong>${fmtDate(from)} → ${fmtDate(to)}</strong> · 📍 ${locLabel} · Sedekah: <strong>${sedekah} unit</strong>
+    </div>`;
+    html += `<div style="overflow-x:auto;"><table><thead><tr>
+      <th>Tempat</th><th>Hantar</th><th>Jual</th><th>Sedekah</th>
+      <th>% Jual</th><th>Jualan</th><th>Kos</th><th>Untung</th>
+    </tr></thead><tbody>`;
+
+    Object.entries(byLoc).forEach(([id, s]) => {
+      const pctSold = s.d ? (s.s/s.d*100) : 0;
+      html += `<tr>
+        <td>${s.name}</td><td>${s.d}</td><td>${s.s}</td><td>${s.d-s.s}</td>
+        <td>${pct(pctSold)}</td><td>${fmt(s.rev)}</td><td>${fmt(s.cost)}</td>
+        <td class="${s.p>=0?'profit':'loss'}">${fmt(s.p)}</td>
+      </tr>`;
+    });
+
+    const totalPct = T.d ? (T.s/T.d*100) : 0;
+    html += `<tr style="background:linear-gradient(90deg,#ccfbf1,#fce7f3); font-weight:700;">
+      <td>JUMLAH</td><td>${T.d}</td><td>${T.s}</td><td>${T.d-T.s}</td>
+      <td>${pct(totalPct)}</td><td>${fmt(T.rev)}</td><td>${fmt(T.cost)}</td>
+      <td class="${T.p>=0?'profit':'loss'}">${fmt(T.p)}</td>
+    </tr></tbody></table></div>`;
+
+    $('customReport').innerHTML = html;
+  } catch (err) {
+    showToast('Gagal: ' + err.message, 'error');
+  } finally {
+    setLoading(false);
+  }
 };
 
 /* ============ CSV EXPORT ============ */
@@ -899,20 +1281,64 @@ function buildCSV(recs, filename) {
   link.click();
 }
 
-window.exportCSV = function() {
-  const monthStr = new Date().toISOString().slice(0,7);
-  const recs = allRecords.filter(r => r.date.startsWith(monthStr));
-  if (!recs.length) return alert('Tiada rekod bulan ini');
-  const [y,m] = monthStr.split('-');
-  buildCSV(recs, `jualan-${m}-${y}.csv`);
+window.exportCSVMonth = function() {
+  if (!allRecords.length) return showToast('Tiada rekod bulan ini', 'warning');
+  const [y,m] = currentMonth.split('-');
+  buildCSV(allRecords, `jualan-${m}-${y}.csv`);
+  showToast('✅ CSV dimuat turun', 'success');
 };
 
-window.exportCSVAll = function() {
-  if (!allRecords.length) return alert('Tiada rekod');
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  buildCSV(allRecords, `jualan-semua-${dd}-${mm}-${now.getFullYear()}.csv`);
+window.exportCSVAll = async function() {
+  setLoading(true);
+  try {
+    const snap = await getDocs(collection(db, 'records'));
+    const recs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!recs.length) return showToast('Tiada rekod', 'warning');
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2,'0');
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    buildCSV(recs, `jualan-semua-${dd}-${mm}-${now.getFullYear()}.csv`);
+    showToast(`✅ ${recs.length} rekod dieksport`, 'success');
+  } catch (err) {
+    showToast('Gagal: ' + err.message, 'error');
+  } finally {
+    setLoading(false);
+  }
+};
+
+/* ============ BACKUP JSON ============ */
+window.backupAll = async function() {
+  if (!confirm('Backup semua data (rekod + lokasi)?\n\nFail JSON akan dimuat turun.')) return;
+  setLoading(true);
+  try {
+    const recSnap = await getDocs(collection(db, 'records'));
+    const recs = recSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const locSnap = await getDocs(collection(db, 'locations'));
+    const locs = locSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    const backup = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      locationCount: locs.length,
+      recordCount: recs.length,
+      locations: locs,
+      records: recs
+    };
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2,'0');
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    link.download = `backup-nadiah-${dd}-${mm}-${now.getFullYear()}.json`;
+    link.click();
+    showToast(`✅ Backup ${recs.length} rekod + ${locs.length} lokasi`, 'success');
+  } catch (err) {
+    showToast('Gagal backup: ' + err.message, 'error');
+  } finally {
+    setLoading(false);
+  }
 };
 
 /* ============ DATE HINTS ============ */
@@ -926,20 +1352,44 @@ $('filterTo').addEventListener('input', e => {
   $('filterToDisplay').textContent = e.target.value ? '📅 ' + fmtDate(e.target.value) : '';
 });
 
+/* ============ AUTO DETECT DATE CHANGE ============ */
+let lastKnownToday = todayISO();
+let lastKnownMonth = currentMonthISO();
+setInterval(() => {
+  const now = todayISO();
+  if (now !== lastKnownToday) {
+    lastKnownToday = now;
+    setBulkDateToday();
+    showToast('📅 Tarikh bertukar ke hari baru', 'info', 5000);
+
+    // Auto-switch to new month if calendar month changed
+    const nowMonth = currentMonthISO();
+    if (nowMonth !== lastKnownMonth) {
+      lastKnownMonth = nowMonth;
+      if (currentMonth !== nowMonth) {
+        currentMonth = nowMonth;
+        $('monthPicker').value = currentMonth;
+        loadRecordsForMonth();
+        showToast('📅 Bulan baru bermula — dimuatkan', 'info', 5000);
+      }
+    } else {
+      // Refresh today's stats
+      render();
+    }
+  }
+}, 60000);
+
 /* ============ AUTH ============ */
 window.doLogin = async function() {
   const email = $('loginEmail').value;
   const pass = $('loginPassword').value;
-  const errEl = $('loginError');
-  errEl.textContent = '';
+  const errEl = $('loginError'); errEl.textContent = '';
   try { await signInWithEmailAndPassword(auth, email, pass); }
   catch (e) { errEl.textContent = 'Ralat: ' + e.message; }
 };
-
 window.doLogout = async function() { if (auth) await signOut(auth); };
 
 /* ============ INIT ============ */
-// Render bulk form with defaults immediately
 renderBulkForm();
 
 if (REQUIRE_AUTH) {
@@ -950,7 +1400,7 @@ if (REQUIRE_AUTH) {
       logoutBtn.classList.remove('hidden');
       logoutBtn.textContent = 'Log Keluar (' + user.email + ')';
       startLocations();
-      startData();
+      loadRecordsForMonth();
     } else {
       loginScreen.classList.remove('hidden');
       appEl.classList.add('hidden');
@@ -961,7 +1411,7 @@ if (REQUIRE_AUTH) {
   });
 } else {
   startLocations();
-  startData();
+  loadRecordsForMonth();
 }
 
 if ('serviceWorker' in navigator) {
