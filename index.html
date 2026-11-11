@@ -722,8 +722,8 @@ function renderBulkForm() {
 
   container.innerHTML = allLocations.map(loc => {
     const prev = saved[loc.id];
-    const defD = prev ? prev.d : (ORIGINAL_IDS.includes(loc.id) ? 10 : 0);
-    const defS = prev ? prev.s : (ORIGINAL_IDS.includes(loc.id) ? 8 : 0);
+    const defD = prev ? prev.d : (ORIGINAL_IDS.includes(loc.id) ? 0 : 0);
+    const defS = prev ? prev.s : (ORIGINAL_IDS.includes(loc.id) ? 0 : 0);
     const actions = editMode ? `
       <div class="loc-btn-group">
         <button class="edit-loc-btn" data-loc-edit="${loc.id}" title="Edit lokasi">✏️</button>
